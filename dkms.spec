@@ -1,7 +1,7 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
 Version: 2.0.5.2
-Release: 2
+Release: 3
 License: GPL
 Group: System Environment/Base
 BuildArch: noarch
@@ -90,6 +90,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,root,root) /usr/sbin/dkms_mkkerneldoth
 %doc %attr(0644,root,root) /usr/share/man/man8/dkms.8.gz
 %doc %attr (-,root,root) sample.spec sample.conf AUTHORS COPYING
+%dir /etc/dkms
 %config(noreplace) /etc/dkms/framework.conf
 %config(noreplace) /etc/dkms/template-dkms-mkrpm.spec
 
@@ -99,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Apr  1 2005 Michael Schwendt <mschwendt[AT]users.sf.net> 2.0.5.2-3
+- Include /etc/dkms directory.
+
 * Tue Mar 15 2005 Tom "spot" Callaway <tcallawa@redhat.com> 2.0.5.2-2
 - Minor spec cleanups:
   Removed check for / before performing clean, unnecessary.
