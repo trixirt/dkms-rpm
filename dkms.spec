@@ -1,7 +1,7 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
 Version: 2.0.5.2
-Release: 3
+Release: 4%{?dist}
 License: GPL
 Group: System Environment/Base
 BuildArch: noarch
@@ -100,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue May 31 2005 Tom "spot" Callaway <tcallawa@redhat.com> 2.0.5.2-4
+- dist tag
+
 * Fri Apr  1 2005 Michael Schwendt <mschwendt[AT]users.sf.net> 2.0.5.2-3
 - Include /etc/dkms directory.
 
