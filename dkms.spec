@@ -1,14 +1,14 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
-Version: 2.0.5.2
-Release: 4%{?dist}
+Version: 2.0.6
+Release: 1%{?dist}
 License: GPL
 Group: System Environment/Base
 BuildArch: noarch
 Requires: sed gawk findutils modutils tar cpio gzip grep mktemp
 Requires: bash > 1.99
 Provides: dkms-minimal
-Source0: dkms-%version.tar.gz
+Source0: http://linux.dell.com/dkms/dkms-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
@@ -84,6 +84,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
+%doc AUTHORS COPYING
 %attr(0755,root,root) /usr/sbin/dkms
 %attr(0755,root,root) /var/lib/dkms
 %attr(0755,root,root) /etc/init.d/dkms_autoinstaller
@@ -100,6 +101,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep  4 2005 Tom "spot" Callaway <tcallawa@redhat.com> 2.0.6-1
+- bump to 2.0.6
+- include COPYING AUTHORS in %%doc
+
 * Tue May 31 2005 Tom "spot" Callaway <tcallawa@redhat.com> 2.0.5.2-4
 - dist tag
 
