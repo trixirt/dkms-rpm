@@ -1,7 +1,7 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
 Version: 2.0.6
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPL
 Group: System Environment/Base
 BuildArch: noarch
@@ -10,6 +10,7 @@ Requires: bash > 1.99
 Provides: dkms-minimal
 Source0: http://linux.dell.com/dkms/dkms-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Requires: kernel-devel
 
 %description
 This package contains the framework for the Dynamic
@@ -101,6 +102,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Sep 12 2005 Tom "spot" Callaway <tcallawa@redhat.com> 2.0.6-2
+- requires kernel-devel
+
 * Sun Sep  4 2005 Tom "spot" Callaway <tcallawa@redhat.com> 2.0.6-1
 - bump to 2.0.6
 - include COPYING AUTHORS in %%doc
