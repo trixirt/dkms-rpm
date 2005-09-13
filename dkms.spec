@@ -1,7 +1,7 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
 Version: 2.0.6
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPL
 Group: System Environment/Base
 BuildArch: noarch
@@ -102,6 +102,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 13 2005 Tom "spot" Callaway <tcallawa@redhat.com> 2.0.6-3
+- no kernel-devel for FC-3
+
 * Mon Sep 12 2005 Tom "spot" Callaway <tcallawa@redhat.com> 2.0.6-2
 - requires kernel-devel
 
