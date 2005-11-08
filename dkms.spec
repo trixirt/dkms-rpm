@@ -1,7 +1,7 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
-Version: 2.0.6
-Release: 3%{?dist}
+Version: 2.0.8
+Release: 1%{?dist}
 License: GPL
 Group: System Environment/Base
 BuildArch: noarch
@@ -102,6 +102,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov  7 2005 Matt Domsch <Matt_Domsch@dell.com> 2.0.8-1
+- Update to 2.0.8 from Gary Lerhaupt
+  - In dkms_autoinstaller added -no-clean-kernel to builds of multiple
+    modules to avoid mrproper
+  - Updated dkms_mkkerneldoth to know about VMWare kernel
+  - Changed root check on ldtarball to only care about root if it sees
+    --force
+
 * Tue Sep 13 2005 Tom "spot" Callaway <tcallawa@redhat.com> 2.0.6-3
 - no kernel-devel for FC-3
 
