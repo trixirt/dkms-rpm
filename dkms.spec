@@ -1,6 +1,6 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
-Version: 2.0.8
+Version: 2.0.9
 Release: 1%{?dist}
 License: GPL
 Group: System Environment/Base
@@ -8,6 +8,7 @@ BuildArch: noarch
 Requires: sed gawk findutils modutils tar cpio gzip grep mktemp
 Requires: bash > 1.99
 Provides: dkms-minimal
+URL: http://linux.dell.com/dkms
 Source0: http://linux.dell.com/dkms/dkms-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: kernel-devel
@@ -102,6 +103,17 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Dec 10 2005 Matt Domsch <Matt_Domsch@dell.com> 2.0.9-1
+- Added URL tag
+- Update to 2.0.9
+  - fix DF28947 (remove word 'only') from a printed message
+  - gzip -9 dkms.8 manpage
+  - look to DKMS_DIRECTIVE* environment variables to override dkms.conf settings
+  - don't create/remove (unused) /var/lock/subsys/dkms files in autoinstaller
+  - Multi driver suse driver disk support (thanks to Sreenivas.Bagalkote@engenio.com)
+  - Cleanup tempdir when ldtarball fails
+  - mkrpm now is built with -ba, not -bb (creates source RPM)
+
 * Mon Nov  7 2005 Matt Domsch <Matt_Domsch@dell.com> 2.0.8-1
 - Update to 2.0.8 from Gary Lerhaupt
   - In dkms_autoinstaller added -no-clean-kernel to builds of multiple
