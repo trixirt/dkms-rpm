@@ -1,7 +1,7 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
 Version: 2.0.9
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPL
 Group: System Environment/Base
 BuildArch: noarch
@@ -103,6 +103,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Feb 12 2006 Matt Domsch <Matt_Domsch@dell.com> 2.0.9-2
+- rebuild for FC5
+
 * Sat Dec 10 2005 Matt Domsch <Matt_Domsch@dell.com> 2.0.9-1
 - Added URL tag
 - Update to 2.0.9
