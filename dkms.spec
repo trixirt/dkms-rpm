@@ -1,7 +1,7 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
-Version: 2.0.9
-Release: 2%{?dist}
+Version: 2.0.10
+Release: 1%{?dist}
 License: GPL
 Group: System Environment/Base
 BuildArch: noarch
@@ -9,7 +9,7 @@ Requires: sed gawk findutils modutils tar cpio gzip grep mktemp
 Requires: bash > 1.99
 Provides: dkms-minimal
 URL: http://linux.dell.com/dkms
-Source0: http://linux.dell.com/dkms/dkms-%{version}.tar.gz
+Source0: http://linux.dell.com/dkms/permalink/dkms-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: kernel-devel
 
@@ -103,6 +103,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Mar 17 2006 Matt Domsch <Matt_Domsch@dell.com> 2.0.10-1
+- Update to 2.0.10
+  - add PRE_INSTALL dkms.conf directive
+  - add SuSE Kernel Module Package (mkkmp) support
+  - patch from Eric Devolder enables mkinitrd for Debian Sarge
+  - include debian/ directory in upstream tarball
+
 * Sun Feb 12 2006 Matt Domsch <Matt_Domsch@dell.com> 2.0.9-2
 - rebuild for FC5
 
