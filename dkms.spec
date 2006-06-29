@@ -1,6 +1,6 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
-Version: 2.0.10
+Version: 2.0.13
 Release: 1%{?dist}
 License: GPL
 Group: System Environment/Base
@@ -74,7 +74,8 @@ echo ""
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/{var/lib/dkms,/usr/sbin,usr/share/man/man8,etc/init.d,etc/dkms}
 install -m 755 dkms $RPM_BUILD_ROOT/usr/sbin/dkms
-install -m 644 dkms.8.gz $RPM_BUILD_ROOT/usr/share/man/man8
+gzip -c -9 dkms.8 > $RPM_BUILD_ROOT/usr/share/man/man8/dkms.8.gz
+chmod 644 $RPM_BUILD_ROOT/usr/share/man/man8/dkms.8.gz
 install -m 644 dkms_framework.conf  $RPM_BUILD_ROOT/etc/dkms/framework.conf
 install -m 644 template-dkms-mkrpm.spec $RPM_BUILD_ROOT/etc/dkms
 install -m 644 dkms_dbversion $RPM_BUILD_ROOT/var/lib/dkms/dkms_dbversion
@@ -86,13 +87,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc AUTHORS COPYING
 %attr(0755,root,root) /usr/sbin/dkms
 %attr(0755,root,root) /var/lib/dkms
 %attr(0755,root,root) /etc/init.d/dkms_autoinstaller
 %attr(0755,root,root) /usr/sbin/dkms_mkkerneldoth
 %doc %attr(0644,root,root) /usr/share/man/man8/dkms.8.gz
-%doc %attr (-,root,root) sample.spec sample.conf AUTHORS COPYING
+%doc %attr (-,root,root) sample.spec sample.conf AUTHORS COPYING README.dkms
+%doc %attr (-,root,root) sample-suse-9-mkkmp.spec sample-suse-10-mkkmp.spec
 %dir /etc/dkms
 %config(noreplace) /etc/dkms/framework.conf
 %config(noreplace) /etc/dkms/template-dkms-mkrpm.spec
@@ -103,6 +104,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jun 29 2006 Matt Domsch <Matt_Domsch@dell.com> 2.0.13-1
+- Update to 2.0.13
+  - fix version comparison for all 2.6 kernels
+  - add README.dkms to %doc
+  - use -n <val> to all head and tail calls
+  - fix munging of /etc/sysconfig/kernel INITRD_MODULES= line
+    so it doesn't move already-present entries to the end
+
 * Fri Mar 17 2006 Matt Domsch <Matt_Domsch@dell.com> 2.0.10-1
 - Update to 2.0.10
   - add PRE_INSTALL dkms.conf directive
