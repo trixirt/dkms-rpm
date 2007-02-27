@@ -1,6 +1,6 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
-Version: 2.0.13
+Version: 2.0.15
 Release: 1%{?dist}
 License: GPL
 Group: System Environment/Base
@@ -16,8 +16,7 @@ Requires: kernel-devel
 %description
 This package contains the framework for the Dynamic
 Kernel Module Support (DKMS) method for installing
-module RPMS as originally developed by the Dell
-Computer Corporation.
+module RPMS as originally developed by Dell.
 
 %prep
 
@@ -104,65 +103,123 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Jun 29 2006 Matt Domsch <Matt_Domsch@dell.com> 2.0.13-1
-- Update to 2.0.13
-  - fix version comparison for all 2.6 kernels
-  - add README.dkms to %doc
-  - use -n <val> to all head and tail calls
-  - fix munging of /etc/sysconfig/kernel INITRD_MODULES= line
-    so it doesn't move already-present entries to the end
+* Mon Feb 26 2007 Matt Domsch <Matt_Domsch@dell.com> 2.0.15-1
+- release with no changes
 
-* Fri Mar 17 2006 Matt Domsch <Matt_Domsch@dell.com> 2.0.10-1
-- Update to 2.0.10
-  - add PRE_INSTALL dkms.conf directive
-  - add SuSE Kernel Module Package (mkkmp) support
-  - patch from Eric Devolder enables mkinitrd for Debian Sarge
-  - include debian/ directory in upstream tarball
+* Fri Feb 23 2007 Matt Domsch <Matt_Domsch@dell.com> 2.0.14.1
+- After upgrading from older DKMS versions to 2.0.14, any previously
+  installed modules wouldn't show status properly, and wouldn't
+  uninstall properly, due to the new policy of using /extras/ and
+  /updates/.  Needed to take that into account and look in both places.
+- SuSE puts weak-modules in /usr/lib/module-init-tools not /sbin.
 
-* Sun Feb 12 2006 Matt Domsch <Matt_Domsch@dell.com> 2.0.9-2
-- rebuild for FC5
+* Thu Feb 22 2007 Matt Domsch <Matt_Domsch@dell.com> 2.0.14
+- RHEL5 weak module status report fixed
 
-* Sat Dec 10 2005 Matt Domsch <Matt_Domsch@dell.com> 2.0.9-1
-- Added URL tag
-- Update to 2.0.9
-  - fix DF28947 (remove word 'only') from a printed message
-  - gzip -9 dkms.8 manpage
-  - look to DKMS_DIRECTIVE* environment variables to override dkms.conf settings
-  - don't create/remove (unused) /var/lock/subsys/dkms files in autoinstaller
-  - Multi driver suse driver disk support (thanks to Sreenivas.Bagalkote@engenio.com)
-  - Cleanup tempdir when ldtarball fails
-  - mkrpm now is built with -ba, not -bb (creates source RPM)
+* Mon Feb 19 2007 Matt Domsch <Matt_Domsch@dell.com> 2.0.13.2
+- RHEL5 weak module recognition with new state installed-weak
+- autoinstaller recognizes installed-weak and doesn't rebuild
+- RHEL5 and SLES10 and higher weak module code expects modules to go
+  into /lib/modules/$kern/{extra,updates} respectively, so force that.
 
-* Mon Nov  7 2005 Matt Domsch <Matt_Domsch@dell.com> 2.0.8-1
-- Update to 2.0.8 from Gary Lerhaupt
-  - In dkms_autoinstaller added -no-clean-kernel to builds of multiple
-    modules to avoid mrproper
-  - Updated dkms_mkkerneldoth to know about VMWare kernel
-  - Changed root check on ldtarball to only care about root if it sees
-    --force
+* Mon Feb 5 2007 Matt Domsch <Matt_Domsch@dell.com>
+- patch from http://qa.mandriva.com/show_bug.cgi?id=27985 assigns new
+  modprobe.conf alias ordinals starting at zero.
 
-* Tue Sep 13 2005 Tom "spot" Callaway <tcallawa@redhat.com> 2.0.6-3
-- no kernel-devel for FC-3
+* Fri Jan 12 2007 Matt Domsch <Matt_Domsch@dell.com> 2.0.13.1
+- properly create driver disks for Fedora Core 6 and RHEL5
+- make .iso, .tar, and floppy .img driver disks for Red Hat and SuSE
+- set CLEAN properly even if MAKE[] isn't set.
+- fix install.sh buglet installing the manpage
 
-* Mon Sep 12 2005 Tom "spot" Callaway <tcallawa@redhat.com> 2.0.6-2
-- requires kernel-devel
+* Thu Jun 29 2006 Matt Domsch <Matt_Domsch@dell.com>
+- cleanups to match Fedora Extras spec file
 
-* Sun Sep  4 2005 Tom "spot" Callaway <tcallawa@redhat.com> 2.0.6-1
-- bump to 2.0.6
-- include COPYING AUTHORS in %%doc
+* Thu Jun 29 2006 Matt Domsch <Matt_Domsch@dell.com> 2.0.13
+- bump to 2.0.13
 
-* Tue May 31 2005 Tom "spot" Callaway <tcallawa@redhat.com> 2.0.5.2-4
-- dist tag
+* Wed Jun 28 2006 Matt Domsch <Matt_Domsch@dell.com> 2.0.12.1-1
+- fix version comparison awk pattern matching invocation and a line continuation
 
-* Fri Apr  1 2005 Michael Schwendt <mschwendt[AT]users.sf.net> 2.0.5.2-3
-- Include /etc/dkms directory.
+* Mon Jun 26 2006 Matt Domsch <Matt_Domsch@dell.com> 2.0.12-1
+- bump to 2.0.12
 
-* Tue Mar 15 2005 Tom "spot" Callaway <tcallawa@redhat.com> 2.0.5.2-2
-- Minor spec cleanups:
-  Removed check for / before performing clean, unnecessary.
-  Removed "Packager" tag.
-  Removed "Vendor" tag.
-  Replaced "Source" with "Source0".
+* Wed Jun 14 2006 Matt Domsch <Matt_Domsch@dell.com> 2.0.11.1-1
+- fix version comparison for all 2.6 kernels
+
+* Mon Apr 10 2006 Matt Domsch <Matt_Domsch@dell.com>
+- add README.dkms to %doc
+
+* Wed Mar 29 2006 Matt Domsch <Matt_Domsch@dell.com> 2.0.11-1
+- use -n <val> to all head and tail calls
+
+* Tue Mar 28 2006 Matt Domsch <Matt_Domsch@dell.com> 2.0.10.1-1
+- fix munging of /etc/sysconfig/kernel INITRD_MODULES= line
+  so it doesn't move already-present entries to the end
+
+* Thu Mar 16 2006 Matt Domsch <Matt_Domsch@dell.com> 2.0.10-1
+- bump to 2.0.10
+
+* Wed Mar 15 2006 Matt Domsch <Matt_Domsch@dell.com> 2.0.9.3-1
+- add PRE_INSTALL dkms.conf directive
+
+* Tue Mar 14 2006 Matt Domsch <Matt_Domsch@dell.com> 2.0.9.2-1
+- add SuSE Kernel Module Package (mkkmp) support
+
+* Tue Dec 13 2005 Matt Domsch <Matt_Domsch@dell.com> 2.0.9.1-1
+- patch from Eric Devolder enables mkinitrd for Debian Sarge
+- include debian/ directory in upstream tarball
+
+* Thu Dec 8 2005 Matt Domsch <Matt_Domsch@dell.com> 2.0.9-1
+- fix DF28947 (remove word 'only') from a printed message
+- gzip -9 dkms.8 manpage
+
+* Wed Dec 7 2005 Matt Domsch <Matt_Domsch@dell.com> 2.0.8.3
+- look to DKMS_DIRECTIVE* environment variables to override dkms.conf settings
+- don't create/remove (unused) /var/lock/subsys/dkms files in autoinstaller
+
+* Mon Nov 7 2005 Gary Lerhaupt <gary_lerhaupt@dell.com> 2.0.8.2
+- Multi driver suse driver disk support (thanks to Sreenivas.Bagalkote@engenio.com)
+- Cleanup tempdir when ldtarball fails
+
+* Mon Nov 7 2005 Gary Lerhaupt <gary_lerhaupt@dell.com> 2.0.8.1
+- mkrpm now is built with -ba, not -bb (creates source RPM)
+
+* Fri Nov 4 2005 Gary Lerhaupt <gary_lerhaupt@dell.com> 2.0.8
+- In dkms_autoinstaller added -no-clean-kernel to builds of multiple modules to avoid mrproper 
+
+* Wed Oct 19 2005 Gary Lerhaupt <gary_lerhaupt@dell.com> 2.0.7
+- Repackaged 2.0.6.2 as 2.0.7 
+
+* Wed Oct 19 2005 Gary Lerhaupt <gary_lerhaupt@dell.com> 2.0.6.2
+- Updated dkms_mkkerneldoth to know about VMWare kernel
+
+* Sun Oct 9 2005 Gary Lerhaupt <gary_lerhaupt@dell.com> 2.0.6.1
+- Changed root check on ldtarball to only care about root if it sees --force
+
+* Fri Sep 2 2005 Gary Lerhaupt <gary_lerhaupt@dell.com> 2.0.6
+- renamed 2.0.5.9 to 2.0.6
+
+* Mon Jul 25 2005 Gary Lerhaupt <gary_lerhaupt@dell.com> 2.0.5.9
+- FIXED BUG, when only some modules have original_modules, ARCHIVE_PREF3 wasn't getting reset causing big problems
+
+* Mon Jul 18 2005 Gary Lerhaupt <gary_lerhaupt@dell.com> 2.0.5.8
+- DKMS install now moves out original modules, does not copy them out
+
+* Tue Jun 7 2005 Gary Lerhaupt <gary_lerhaupt@dell.com> 2.0.5.7
+- Get rid of grep error when looking for RH file on non RH distro (Matt Domsch)
+
+* Wed May 11 2005 Gary Lerhaupt <gary_lerhaupt@dell.com> 2.0.5.6
+- handle obsolete modules in /etc/sysconfig/kernel
+
+* Fri Apr 29 2005 Gary Lerhaupt <gary_lerhaupt@dell.com> 2.0.5.5
+- dkms remove now properly removes modules_conf_aliases (thanks Matthew Melvin)
+
+* Wed Apr 20 2005 Gary Lerhaupt <gary_lerhaupt@dell.com> 2.0.5.4
+- Mktarball fails if it can't find dkms_dbversion
+
+* Tue Mar 15 2005 Gary Lerhaupt <gary_lerhaupt@dell.com> 2.0.5.3
+- More spec cleanups
 
 * Mon Mar 14 2005 Gary Lerhaupt <gary_lerhaupt@dell.com> 2.0.5.2
 - Tweaked spec to follow http://fedoraproject.org/wiki/PackagingGuidelines
