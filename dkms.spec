@@ -1,16 +1,18 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
-Version: 2.0.16
+Version: 2.0.17.4
 Release: 1%{?dist}
 License: GPL
 Group: System Environment/Base
 BuildArch: noarch
 Requires: sed gawk findutils modutils tar cpio gzip grep mktemp
 Requires: bash > 1.99
-Provides: dkms-minimal
+# because Mandriva calls this package dkms-minimal
+Provides: dkms-minimal = %{version}
 URL: http://linux.dell.com/dkms
 Source0: http://linux.dell.com/dkms/permalink/dkms-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+# when building for Fedora, uncomment this Requires
 Requires: kernel-devel
 
 %description
@@ -21,12 +23,13 @@ module RPMS as originally developed by Dell.
 %prep
 
 %setup -q
+%build
 
-%triggerpostun -- dkms < 1.90.00-1
-for dir in `find /var/dkms -type d -maxdepth 1 -mindepth 1`; do
-	mv -f $dir /var/lib/dkms
+%triggerpostun -- %{name} < 1.90.00-1
+for dir in `find %{_localstatedir}/%{name} -type d -maxdepth 1 -mindepth 1`; do
+	mv -f $dir %{_localstatedir}/lib/%{name}
 done
-[ -e /etc/dkms_framework.conf ] && ! [ -e /etc/dkms/framework.conf ] && mkdir /etc/dkms && cp /etc/dkms_framework.conf /etc/dkms/framework.conf
+[ -e %{_sysconfdir}/dkms_framework.conf ] && ! [ -e %{_sysconfdir}/%{name}/framework.conf ] && mkdir %{_sysconfdir}/%{name} && cp -a %{_sysconfdir}/dkms_framework.conf %{_sysconfdir}/%{name}/framework.conf
 arch_used=""
 [ `uname -m` == "x86_64" ] && [ `cat /proc/cpuinfo | grep -c "Intel"` -gt 0 ] && arch_used="ia32e" || arch_used=`uname -m`
 echo ""
@@ -37,10 +40,10 @@ echo "architectures.  Your DKMS tree will now be modified to add this support."
 echo ""
 echo "The upgrade will assume all built modules are for arch: $arch_used"
 current_kernel=`uname -r`
-dkms_tree="/var/lib/dkms"
-source_tree="/usr/src"
+dkms_tree="%{_localstatedir}/lib/%{name}"
+source_tree="%{_prefix}/src"
 tmp_location="/tmp"
-dkms_frameworkconf="/etc/dkms/framework.conf"
+dkms_frameworkconf="%{_sysconfdir}/%{name}/framework.conf"
 . $dkms_frameworkconf 2>/dev/null
 echo ""
 echo "Fixing directories."
@@ -48,18 +51,18 @@ for directory in `find $dkms_tree -type d -name "module" -mindepth 3 -maxdepth 4
 	dir_to_fix=`echo $directory | sed 's#/module$##'`
 	echo "Creating $dir_to_fix/$arch_used..."
 	mkdir $dir_to_fix/$arch_used
-	mv -f $dir_to_fix/* $dir_to_fix/$arch_used 2>/dev/null 
+	mv -f $dir_to_fix/* $dir_to_fix/$arch_used 2>/dev/null
 done
 echo ""
-echo "Fixing symlinks."	
+echo "Fixing symlinks."
 for symlink in `find $dkms_tree -type l -name "kernel*" -mindepth 2 -maxdepth 2`; do
 	symlink_kernelname=`echo $symlink | sed 's#.*/kernel-##'`
 	dir_of_symlink=`echo $symlink | sed 's#/kernel-.*$##'`
 	cd $dir_of_symlink
-        read_link="$symlink"
-        while [ -L "$read_link" ]; do
-            read_link=`ls -l $read_link | sed 's/.*-> //'`
-        done
+	read_link="$symlink"
+	while [ -L "$read_link" ]; do
+		read_link=`ls -l $read_link | sed 's/.*-> //'`
+	done
 	if [ `echo $read_link | sed 's#/# #g' | wc -w | awk {'print $1'}` -lt 3 ]; then
 		echo "Updating $symlink..."
 		ln -sf $read_link/$arch_used kernel-$symlink_kernelname-$arch_used
@@ -71,43 +74,59 @@ echo ""
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT/{var/lib/dkms,/usr/sbin,usr/share/man/man8,etc/init.d,etc/dkms}
-install -m 755 dkms $RPM_BUILD_ROOT/usr/sbin/dkms
-gzip -c -9 dkms.8 > $RPM_BUILD_ROOT/usr/share/man/man8/dkms.8.gz
-chmod 644 $RPM_BUILD_ROOT/usr/share/man/man8/dkms.8.gz
-install -m 644 dkms_framework.conf  $RPM_BUILD_ROOT/etc/dkms/framework.conf
-install -m 644 template-dkms-mkrpm.spec $RPM_BUILD_ROOT/etc/dkms
-install -m 644 dkms_dbversion $RPM_BUILD_ROOT/var/lib/dkms/dkms_dbversion
-install -m 755 dkms_autoinstaller $RPM_BUILD_ROOT/etc/init.d/dkms_autoinstaller
-install -m 755 dkms_mkkerneldoth $RPM_BUILD_ROOT/usr/sbin/dkms_mkkerneldoth
+make install-redhat DESTDIR=$RPM_BUILD_ROOT \
+    SBIN=$RPM_BUILD_ROOT%{_sbindir} \
+    VAR=$RPM_BUILD_ROOT%{_localstatedir}/lib/%{name} \
+    MAN=$RPM_BUILD_ROOT%{_mandir}/man8 \
+    ETC=$RPM_BUILD_ROOT%{_sysconfdir}/%{name} \
+    BASHDIR=$RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d \
+    LIBDIR=$RPM_BUILD_ROOT%{_prefix}/lib/%{name}
 
-%clean 
+%clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%attr(0755,root,root) /usr/sbin/dkms
-%attr(0755,root,root) /var/lib/dkms
-%attr(0755,root,root) /etc/init.d/dkms_autoinstaller
-%attr(0755,root,root) /usr/sbin/dkms_mkkerneldoth
-%doc %attr(0644,root,root) /usr/share/man/man8/dkms.8.gz
-%doc %attr (-,root,root) sample.spec sample.conf AUTHORS COPYING README.dkms
-%doc %attr (-,root,root) sample-suse-9-mkkmp.spec sample-suse-10-mkkmp.spec
-%dir /etc/dkms
-%config(noreplace) /etc/dkms/framework.conf
-%config(noreplace) /etc/dkms/template-dkms-mkrpm.spec
+%{_sbindir}/%{name}
+%{_localstatedir}/lib/%{name}
+/etc/init.d/dkms_autoinstaller
+%{_prefix}/lib/dkms/*
+%{_mandir}/*/*
+%doc sample.spec sample.conf AUTHORS COPYING README.dkms
+%doc sample-suse-9-mkkmp.spec sample-suse-10-mkkmp.spec
+%dir %{_sysconfdir}/%{name}
+%config(noreplace) %{_sysconfdir}/%{name}/framework.conf
+%config(noreplace) %{_sysconfdir}/%{name}/template-dkms-mkrpm.spec
+%{_sysconfdir}/bash_completion.d/%{name}
 
 %post
 [ -e /sbin/dkms ] && mv -f /sbin/dkms /sbin/dkms.old 2>/dev/null
-/sbin/chkconfig dkms_autoinstaller on
+# enable on initial install
+[ $1 -lt 2 ] && /sbin/chkconfig dkms_autoinstaller on ||:
 
+%preun
+# remove on uninstall
+[ $1 -lt 1 ] && /sbin/chkconfig dkms_autoinstaller off ||:
 
 %changelog
-* Tue Feb 27 2007 Matt Domsch <Matt_Domsch@dell.com> 2.0.16-1
+* Wed Sep 19 2007 Matt Domsch <Matt_Domsch@dell.com> 2.0.17.4
+- upgrade to latest upstream
+
+* Wed Jun 20 2007 Matt Domsch <Matt_Domsch@dell.com> 2.0.16.2
+- updated for Ubuntu support, other bugfixes.
+
+* Tue Mar 20 2007 Matt Domsch <Matt_Domsch@dell.com> 2.0.16.1
+- spec file cleanups per re-review in Fedora
+- add bash completion, rpmbuild check, pinit, pass-arch patches from
+  Mandriva.  These are generic.  The other Mandriva patches appear to
+  be distro-specific.
+- Look for /etc/sysconfig/module-init-tools to get some values.
+
+* Tue Feb 27 2007 Matt Domsch <Matt_Domsch@dell.com> 2.0.16
 - fix override_dest_module_location() for historical distro versions
 - don't run weak-modules if it doesn't exist
 
-* Mon Feb 26 2007 Matt Domsch <Matt_Domsch@dell.com> 2.0.15-1
+* Mon Feb 26 2007 Matt Domsch <Matt_Domsch@dell.com> 2.0.15
 - release with no changes
 
 * Fri Feb 23 2007 Matt Domsch <Matt_Domsch@dell.com> 2.0.14.1
@@ -152,7 +171,7 @@ rm -rf $RPM_BUILD_ROOT
 - fix version comparison for all 2.6 kernels
 
 * Mon Apr 10 2006 Matt Domsch <Matt_Domsch@dell.com>
-- add README.dkms to %doc
+- add README.dkms to doc
 
 * Wed Mar 29 2006 Matt Domsch <Matt_Domsch@dell.com> 2.0.11-1
 - use -n <val> to all head and tail calls
@@ -190,10 +209,10 @@ rm -rf $RPM_BUILD_ROOT
 - mkrpm now is built with -ba, not -bb (creates source RPM)
 
 * Fri Nov 4 2005 Gary Lerhaupt <gary_lerhaupt@dell.com> 2.0.8
-- In dkms_autoinstaller added -no-clean-kernel to builds of multiple modules to avoid mrproper 
+- In dkms_autoinstaller added -no-clean-kernel to builds of multiple modules to avoid mrproper
 
 * Wed Oct 19 2005 Gary Lerhaupt <gary_lerhaupt@dell.com> 2.0.7
-- Repackaged 2.0.6.2 as 2.0.7 
+- Repackaged 2.0.6.2 as 2.0.7
 
 * Wed Oct 19 2005 Gary Lerhaupt <gary_lerhaupt@dell.com> 2.0.6.2
 - Updated dkms_mkkerneldoth to know about VMWare kernel
@@ -271,7 +290,7 @@ rm -rf $RPM_BUILD_ROOT
 
 * Tue Sep 28 2004 Gary Lerhaupt <gary_lerhaupt@dell.com> 2.0.1.2-1
 - Charles Duffy's fix for multiple rpms owning /lib/modules/kernel...
-- Andreas Gruenbacher's removal of IFS usage 
+- Andreas Gruenbacher's removal of IFS usage
 - Andreas Gruenbacher's reorganizing prepare check into prepare_kernel
 - Andreas Gruenbacher's patch to cut down on line length by using $base_dir
 - fixed $base_dir so it gets set after setup_kernels_arches
@@ -279,7 +298,7 @@ rm -rf $RPM_BUILD_ROOT
 * Sun Sep 12 2004 Andreas Gruenbacher <agruen@suse.de>
 - patch to remove tick usage
 - patch to rewrite version comparison code
-- patch to switch to usage of case, remove use of grep -c, remove use of IFS 
+- patch to switch to usage of case, remove use of grep -c, remove use of IFS
 - patch to change handling of stderr
 
 * Fri Sep 10 2004 Gary Lerhaupt <gary_lerhaupt@dell.com>
@@ -645,7 +664,7 @@ rm -rf $RPM_BUILD_ROOT
 - Added --no-prepare-kernel cli option
 
 * Fri Aug 08 2003 Gary Lerhaupt <gary_lerhaupt@dell.com> 0.33.02-1
-- Fixed quote bugs in match (Reported by: John Hull <john_hull@dell.com>) 
+- Fixed quote bugs in match (Reported by: John Hull <john_hull@dell.com>)
 - Added Fred Treasure to the AUTHORS list
 - Added dkms_dbversion file to DKMS tree to track architecture of dkms db layout
 
@@ -694,7 +713,7 @@ rm -rf $RPM_BUILD_ROOT
 
 * Tue Apr 29 2003 Gary Lerhaupt <gary_lerhaupt@dell.com> 0.27.05-1
 - Changed NEEDED_FOR_BOOT to REMAKE_INITRD as this makes more sense
-- Redid handling of modifying modules.conf 
+- Redid handling of modifying modules.conf
 - Added MODULE_CONF_ALIAS_TYPE to specs
 
 * Mon Apr 28 2003 Gary Lerhaupt <gary_lerhaupt@dell.com> 0.26.12-1
