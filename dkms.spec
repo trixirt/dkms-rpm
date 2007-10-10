@@ -1,6 +1,6 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
-Version: 2.0.17.4
+Version: 2.0.17.5
 Release: 1%{?dist}
 License: GPL
 Group: System Environment/Base
@@ -109,6 +109,11 @@ rm -rf $RPM_BUILD_ROOT
 [ $1 -lt 1 ] && /sbin/chkconfig dkms_autoinstaller off ||:
 
 %changelog
+* Wed Oct 10 2007 Matt Domsch <Matt_Domsch@dell.com> 2.0.17.5
+- call udevtrigger if we install a module for the currently running kernel
+- uninstall from /extra before DEST_MODULE_LOCATION (Red Hat BZ#264981)
+- Run depmod after uninstall
+
 * Wed Sep 19 2007 Matt Domsch <Matt_Domsch@dell.com> 2.0.17.4
 - upgrade to latest upstream
 
