@@ -1,6 +1,6 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
-Version: 2.0.17.5
+Version: 2.0.17.6
 Release: 1%{?dist}
 License: GPL
 Group: System Environment/Base
@@ -109,6 +109,10 @@ rm -rf $RPM_BUILD_ROOT
 [ $1 -lt 1 ] && /sbin/chkconfig dkms_autoinstaller off ||:
 
 %changelog
+* Fri Feb 15 2008 Matt Domsch <Matt_Domsch@dell.com> 2.0.17.6
+- call udevadm trigger instead of udevtrigger for newer udev (Launchpad #192241)
+- omit installed-weak modules from remove --all (Red Hat BZ#429410)
+
 * Wed Oct 10 2007 Matt Domsch <Matt_Domsch@dell.com> 2.0.17.5
 - call udevtrigger if we install a module for the currently running kernel
 - uninstall from /extra before DEST_MODULE_LOCATION (Red Hat BZ#264981)
