@@ -1,7 +1,7 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
 Version: 2.0.19.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 BuildArch: noarch
@@ -110,6 +110,9 @@ rm -rf $RPM_BUILD_ROOT
 [ $1 -lt 1 ] && /sbin/chkconfig dkms_autoinstaller off ||:
 
 %changelog
+* Tue Feb 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.19.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
 * Wed May 28 2008 Matt Domsch <Matt_Domsch@dell.com> 2.0.19.1
 - depmod on uninstall before mkinitrd, depmod fix & cleanups
 - find_module_from_ko() could incorrectly return multiple values
