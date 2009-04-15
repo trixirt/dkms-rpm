@@ -1,0 +1,22 @@
+From b2721fad5e830cc4c689ecfd37cdd1ab3768daf3 Mon Sep 17 00:00:00 2001
+From: Mario Limonciello <Mario_Limonciello@Dell.com>
+Date: Thu, 5 Mar 2009 11:06:50 -0600
+Subject: [PATCH] merge in a few changes from Keybuk to alter behaviors on Ubuntu a little bit
+
+---
+
+diff --git a/dkms b/dkms
+index eccd84e..a8b1d58 100755
+--- a/dkms
++++ b/dkms
+@@ -705,6 +705,7 @@ function moduleconfig_add ()
+ 
+     local temp_dir_name=`mktemp -d $tmp_location/dkms.XXXXXX`
+     modconfig_files=""
++    [ -e /etc/modprobe.d/dkms.conf ] && modconfig_files="/etc/modprobe.d/dkms.conf"
+     [ -e /etc/modprobe.d/dkms ] && modconfig_files="/etc/modprobe.d/dkms"
+     [ -e /etc/modules.conf ] && modconfig_files="$modconfig_files /etc/modules.conf"
+     [ -e /etc/modprobe.conf ] && modconfig_files="$modconfig_files /etc/modprobe.conf"
+-- 
+1.6.0.6
+

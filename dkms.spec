@@ -1,7 +1,7 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
-Version: 2.0.19.1
-Release: 2%{?dist}
+Version: 2.0.21.1
+Release: 1%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 BuildArch: noarch
@@ -11,9 +11,12 @@ Requires: bash > 1.99
 Provides: dkms-minimal = %{version}
 URL: http://linux.dell.com/dkms
 Source0: http://linux.dell.com/dkms/permalink/dkms-%{version}.tar.gz
+Patch0: dkms-modprobe.d.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-# when building for Fedora, uncomment this Requires
+
+%if 0%{?fedora}
 Requires: kernel-devel
+%endif
 
 %description
 This package contains the framework for the Dynamic
@@ -23,6 +26,8 @@ module RPMS as originally developed by Dell.
 %prep
 
 %setup -q
+%patch0 -p1
+
 %build
 
 %triggerpostun -- %{name} < 1.90.00-1
@@ -100,6 +105,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/kernel/prerm.d/%{name}
 %{_sysconfdir}/bash_completion.d/%{name}
 
+%if 0%{?suse_version}
+# suse doesnt yet support /etc/kernel/{prerm.d,postinst.d}, but will fail build
+# with unowned dirs if we dont own them ourselves
+# when opensuse *does* add this support, we will need to BuildRequires kernel
+%dir %{_sysconfdir}/kernel
+%dir %{_sysconfdir}/kernel/postinst.d
+%dir %{_sysconfdir}/kernel/prerm.d
+%endif
+
+
 %post
 [ -e /sbin/dkms ] && mv -f /sbin/dkms /sbin/dkms.old 2>/dev/null
 # enable on initial install
@@ -110,6 +125,9 @@ rm -rf $RPM_BUILD_ROOT
 [ $1 -lt 1 ] && /sbin/chkconfig dkms_autoinstaller off ||:
 
 %changelog
+* Tue Apr 14 2009 Matt Domsch <Matt_Domsch@dell.com> 2.0.21.1-1
+- update to latest upstream
+
 * Tue Feb 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.19.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
