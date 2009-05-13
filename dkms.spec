@@ -1,12 +1,12 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
 Version: 2.0.21.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 BuildArch: noarch
 Requires: sed gawk findutils modutils tar cpio gzip grep mktemp
-Requires: bash > 1.99
+Requires: bash > 1.99, lsb
 # because Mandriva calls this package dkms-minimal
 Provides: dkms-minimal = %{version}
 URL: http://linux.dell.com/dkms
@@ -125,6 +125,9 @@ rm -rf $RPM_BUILD_ROOT
 [ $1 -lt 1 ] && /sbin/chkconfig dkms_autoinstaller off ||:
 
 %changelog
+* Wed Apr 15 2009 Matt Domsch <Matt_Domsch@dell.com> - 2.0.21.1-2
+- add Requires: lsb
+
 * Tue Apr 14 2009 Matt Domsch <Matt_Domsch@dell.com> 2.0.21.1-1
 - update to latest upstream
 
