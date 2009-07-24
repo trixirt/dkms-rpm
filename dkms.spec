@@ -1,7 +1,7 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
 Version: 2.0.21.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 BuildArch: noarch
@@ -125,6 +125,9 @@ rm -rf $RPM_BUILD_ROOT
 [ $1 -lt 1 ] && /sbin/chkconfig dkms_autoinstaller off ||:
 
 %changelog
+* Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.21.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
 * Wed Apr 15 2009 Matt Domsch <Matt_Domsch@dell.com> - 2.0.21.1-2
 - add Requires: lsb
 
