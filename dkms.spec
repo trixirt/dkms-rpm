@@ -1,6 +1,6 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
-Version: 2.1.0.0
+Version: 2.1.0.1
 Release: 1%{?dist}
 License: GPLv2+
 Group: System Environment/Base
@@ -122,6 +122,9 @@ rm -rf $RPM_BUILD_ROOT
 [ $1 -lt 1 ] && /sbin/chkconfig dkms_autoinstaller off ||:
 
 %changelog
+* Wed Sep  9 2009 Matt Domsch <Matt_Domsch@dell.com> - 2.1.0.1-1
+- fix mkrpm command, with thanks to Thomas Chenault.
+
 * Sat Aug 22 2009 Matt Domsch <Matt_Domsch@dell.com> - 2.1.0.0-1
 - update to latest upstream
 - drop Requires: lsb.  avoid calling rpm (recursively) if possible.
