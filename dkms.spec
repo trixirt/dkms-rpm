@@ -1,7 +1,7 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
-Version: 2.1.0.1
-Release: 1%{?dist}
+Version: 2.1.1.2
+Release: 1.gitb66d7406%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 BuildArch: noarch
@@ -10,7 +10,9 @@ Requires: bash > 1.99
 # because Mandriva calls this package dkms-minimal
 Provides: dkms-minimal = %{version}
 URL: http://linux.dell.com/dkms
-Source0: http://linux.dell.com/dkms/permalink/dkms_%{version}.orig.tar.gz
+#Source0: http://linux.dell.com/dkms/permalink/dkms-%{version}.tar.gz
+# git checkout with HEAD b66d7406
+Source0: dkms-2.1.1.2-gitb66d7406.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if 0%{?fedora}
@@ -24,7 +26,7 @@ module RPMS as originally developed by Dell.
 
 %prep
 
-%setup -q
+%setup -q -n dkms
 %build
 
 %triggerpostun -- %{name} < 1.90.00-1
@@ -91,16 +93,17 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %{_sbindir}/%{name}
 %{_localstatedir}/lib/%{name}
-/etc/init.d/dkms_autoinstaller
 %{_prefix}/lib/%{name}
 %{_mandir}/*/*
 %config(noreplace) %{_sysconfdir}/%{name}
 %doc sample.spec sample.conf AUTHORS COPYING README.dkms
 %doc sample-suse-9-mkkmp.spec sample-suse-10-mkkmp.spec
 # these dirs are for plugins - owned by other packages
+%{_initddir}/dkms_autoinstaller
 %{_sysconfdir}/kernel/postinst.d/%{name}
 %{_sysconfdir}/kernel/prerm.d/%{name}
 %{_sysconfdir}/bash_completion.d/%{name}
+%{_datadir}/apport/package-hooks/%{name}.py*
 
 %if 0%{?suse_version}
 # suse doesnt yet support /etc/kernel/{prerm.d,postinst.d}, but will fail build
@@ -122,6 +125,9 @@ rm -rf $RPM_BUILD_ROOT
 [ $1 -lt 1 ] && /sbin/chkconfig dkms_autoinstaller off ||:
 
 %changelog
+* Mon Oct  4 2010 Matt Domsch <Matt_Domsch@dell.com> - 2.1.1.2-1.gitb66d7406
+- update to 2.1.1.2 plus 6 months of patches
+
 * Wed Sep  9 2009 Matt Domsch <Matt_Domsch@dell.com> - 2.1.0.1-1
 - fix mkrpm command, with thanks to Thomas Chenault.
 
