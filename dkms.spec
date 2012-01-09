@@ -1,6 +1,6 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
-Version: 2.2.0.2
+Version: 2.2.0.3
 Release: 1%{dist}
 License: GPLv2+
 Group: System Environment/Base
@@ -12,7 +12,7 @@ Provides: dkms-minimal = %{version}
 URL: http://linux.dell.com/dkms
 #Source0: http://linux.dell.com/dkms/permalink/dkms-%{version}.tar.gz
 # git checkout with HEAD b66d7406
-Source0: dkms-2.2.0.2.tar.gz
+Source0: dkms-2.2.0.3.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}.%{release}-root-%(%{__id_u} -n)
 
 %if 0%{?fedora}
@@ -125,6 +125,9 @@ rm -rf $RPM_BUILD_ROOT
 [ $1 -lt 1 ] && /sbin/chkconfig dkms_autoinstaller off ||:
 
 %changelog
+* Tue Jan 10 2012 Sunil Gupta <Sunil_Gupta2@dell.com> - 2.2.0.3-1
+- update to 2.2.0.3
+
 * Mon Aug 22 2011 Sunil Gupta <Sunil_Gupta2@dell.com> - 2.2.0.2-1
 - update to 2.2.0.2 
 
