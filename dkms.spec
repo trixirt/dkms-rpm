@@ -1,11 +1,11 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
 Version: 2.2.0.3
-Release: 1%{dist}
+Release: 2%{dist}
 License: GPLv2+
 Group: System Environment/Base
 BuildArch: noarch
-Requires: sed gawk findutils modutils tar cpio gzip grep coreutils
+Requires: sed gawk findutils kmod tar cpio gzip grep coreutils
 Requires: bash > 1.99
 # because Mandriva calls this package dkms-minimal
 Provides: dkms-minimal = %{version}
@@ -125,6 +125,9 @@ rm -rf $RPM_BUILD_ROOT
 [ $1 -lt 1 ] && /sbin/chkconfig dkms_autoinstaller off ||:
 
 %changelog
+* Wed Feb  8 2012 Kay Sievers <kay@redhat.com> - 2.2.0.3-2
+- modutils are for Linux 2.4 and no longer provided; depend on kmod
+
 * Tue Jan 10 2012 Sunil Gupta <Sunil_Gupta2@dell.com> - 2.2.0.3-1
 - update to 2.2.0.3
 
