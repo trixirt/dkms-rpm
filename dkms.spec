@@ -1,7 +1,7 @@
 Summary: Dynamic Kernel Module Support Framework
 Name: dkms
 Version: 2.2.0.3
-Release: 2%{dist}
+Release: 3%{dist}
 License: GPLv2+
 Group: System Environment/Base
 BuildArch: noarch
@@ -116,7 +116,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %post
-[ -e /sbin/dkms ] && mv -f /sbin/dkms /sbin/dkms.old 2>/dev/null
 # enable on initial install
 [ $1 -lt 2 ] && /sbin/chkconfig dkms_autoinstaller on ||:
 
@@ -125,6 +124,9 @@ rm -rf $RPM_BUILD_ROOT
 [ $1 -lt 1 ] && /sbin/chkconfig dkms_autoinstaller off ||:
 
 %changelog
+* Tue Jun  5 2012 Praveen K Paladugu <praveen_paladugu@dell.com> -2.2.0.3-3
+- don't move dkms to dkms.old. This breaks updates
+
 * Wed Feb  8 2012 Kay Sievers <kay@redhat.com> - 2.2.0.3-2
 - modutils are for Linux 2.4 and no longer provided; depend on kmod
 
