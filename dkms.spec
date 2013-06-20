@@ -13,7 +13,7 @@ URL:            http://linux.dell.com/dkms
 BuildRoot:      %{_tmppath}/%{name}-%{version}.%{release}-root-%(%{__id_u} -n)
 
 Source0:        http://linux.dell.com/%{name}/permalink/%{name}-%{version}.tar.gz
-Source1:        %{name}_autoinstaller.service
+Source1:        %{name}.service
 Source2:        %{name}_autoinstaller.init
 
 Requires:       coreutils
@@ -28,21 +28,12 @@ Requires:       kmod
 Requires:       sed
 Requires:       tar
 
-%if 0%{?fedora} == 17
-Requires(post):         systemd-units
-Requires(preun):        systemd-units
-Requires(postun):       systemd-units
-Requires(post):         systemd-sysv
-%endif
-
-%if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
+%if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
 Requires(post):         systemd-sysv
 Requires(post):         systemd
 Requires(preun):        systemd
 Requires(postun):       systemd
-%endif
-
-%if 0%{?rhel} == 5 || 0%{?rhel} == 6
+%else
 Requires(post):         /sbin/chkconfig
 Requires(preun):        /sbin/chkconfig
 Requires(preun):        /sbin/service
@@ -68,12 +59,12 @@ make install-redhat DESTDIR=%{buildroot} \
     BASHDIR=%{buildroot}%{_sysconfdir}/bash_completion.d \
     LIBDIR=%{buildroot}%{_libdir}/%{name}
 
-%if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
+%if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
 
 # Systemd unit files
 rm -rf %{buildroot}%{_initrddir}
 mkdir -p %{buildroot}%{_unitdir}
-install -p -m 644 -D %{SOURCE1} %{buildroot}%{_unitdir}/%{name}_autoinstaller.service
+install -p -m 644 -D %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
 
 %else
 
@@ -86,7 +77,7 @@ install -p -m 755 -D %{SOURCE2} %{buildroot}%{_initrddir}/%{name}_autoinstaller
 %clean
 rm -rf %{buildroot}
 
-%if 0%{?fedora}
+%if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
 
 %triggerun -- dkms < 2.2.0.3-6
 # Save the current service runlevel info
@@ -101,34 +92,6 @@ rm -rf %{buildroot}
 /sbin/chkconfig --del %{name}_autoinstaller >/dev/null 2>&1 || :
 /bin/systemctl try-restart %{name}_autoinstaller.service >/dev/null 2>&1 || :
 
-%endif
-
-%if 0%{?fedora} == 16 || 0%{?fedora} == 17
-
-%post
-if [ $1 -eq 1 ] ; then
-    # Initial installation
-    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
-fi
-
-%preun
-if [ $1 -eq 0 ] ; then
-    # Package removal, not upgrade
-    /bin/systemctl --no-reload disable %{name}_autoinstaller.service > /dev/null 2>&1 || :
-    /bin/systemctl stop %{name}_autoinstaller.service > /dev/null 2>&1 || :
-fi
-
-%postun
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ $1 -ge 1 ] ; then
-    # Package upgrade, not uninstall
-    /bin/systemctl try-restart %{name}_autoinstaller.service >/dev/null 2>&1 || :
-fi
-
-%endif
-
-%if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
-
 %post
 %systemd_post %{name}_autoinstaller.service
 
@@ -136,14 +99,13 @@ fi
 %systemd_preun %{name}_autoinstaller.service
 
 %postun
-%systemd_postun_with_restart %{name}_autoinstaller.service
+%systemd_postun %{name}_autoinstaller.service
 
-%endif
-
-%if 0%{?rhel} == 5 || 0%{?rhel} == 6
+%else
 
 %post
 /sbin/chkconfig --add %{name}_autoinstaller
+/sbin/chkconfig %{name}_autoinstaller on
 
 %preun
 if [ "$1" = 0 ]; then
@@ -161,8 +123,8 @@ fi
 %files
 %defattr(-,root,root)
 %doc sample.spec sample.conf AUTHORS COPYING README.dkms
-%if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
-%{_unitdir}/%{name}_autoinstaller.service
+%if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
+%{_unitdir}/%{name}.service
 %else
 %{_initrddir}/%{name}_autoinstaller
 %endif
@@ -183,6 +145,8 @@ fi
 - Rework file list.
 - Add proper SysV and systemd requirements.
 - Add correct SysV init script and systemd service file.
+- Enable systemd on Fedora 20+ and add it to systemd preset as per
+  https://fedorahosted.org/fesco/ticket/1123
 
 * Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.0.3-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
