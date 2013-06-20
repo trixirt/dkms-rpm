@@ -5,7 +5,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        6%{dist}
+Release:        7%{dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
@@ -15,6 +15,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}.%{release}-root-%(%{__id_u} -n)
 Source0:        http://linux.dell.com/%{name}/permalink/%{name}-%{version}.tar.gz
 Source1:        %{name}.service
 Source2:        %{name}_autoinstaller.init
+Patch0:         %{name}-git.patch
 
 Requires:       coreutils
 Requires:       cpio
@@ -46,6 +47,7 @@ method for installing module RPMS as originally developed by Dell.
 
 %prep
 %setup -q -n dkms
+%patch0 -p1
 
 %build
 
@@ -109,7 +111,7 @@ rm -rf %{buildroot}
 
 %preun
 if [ "$1" = 0 ]; then
-        /sbin/service %{name}_autoinstaller} stop >/dev/null 2>&1 || :
+        /sbin/service %{name}_autoinstaller stop >/dev/null 2>&1 || :
         /sbin/chkconfig --del %{name}_autoinstaller
 fi
 
@@ -138,6 +140,10 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Thu Jun 20 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-7
+- Update to upstream git.
+- Fix SysV init scriptlet and init file.
+
 * Thu May 23 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-6
 - Rework spec file completely; remove cruft.
 - Trim changelog.

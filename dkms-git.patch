@@ -1,0 +1,223 @@
+diff --git a/dkms b/dkms
+index abb01a4..5b02e85 100644
+--- a/dkms
++++ b/dkms
+@@ -69,14 +69,16 @@ invoke_command()
+     local exitval=0
+     [[ $verbose ]] && echo -e "$1" || echo -en "$2..."
+     if [[ $3 = background && ! $verbose ]]; then
+-	local exitval_file=$(mktemp_or_die $tmp_location/dkms.XXXXXX)
+-	(eval "$1" >/dev/null 2>&1; echo "exitval=$?" >> "$exitval_file") &
+-	while [[ -e $exitval_file && ! -s $exitval_file ]]; do
+-	    sleep 3
+-	    echo -en "."
+-	done
+-	. "$exitval_file"
+-	rm -f "$exitval_file"
++	local pid progresspid
++	(eval "$1" >/dev/null 2>&1) & pid=$!
++	while [ -d /proc/$pid ]; do
++		sleep 3
++		echo -en "."
++	done & progresspid=$!
++	wait $pid 2>/dev/null
++	exitval=$?
++	kill $progresspid 2>/dev/null
++	wait $progresspid 2>/dev/null
+     else
+ 	eval "$1"; exitval=$?
+     fi
+@@ -126,6 +128,7 @@ show_usage()
+     echo $"              [--kernelsourcedir=source-location] [--no-prepare-kernel] [--no-initrd]"
+     echo $"              [--binaries-only] [--source-only] [-r release (SuSE)] [--verbose]"
+     echo $"              [--size] [--spec=specfile] [--media=floppy|iso|tar] [--legacy-postinst=0|1]"
++    echo $"              [--no-depmod]"
+ }
+ 
+ VER()
+@@ -162,11 +165,14 @@ set_kernel_source_dir()
+ 
+ # A little test function for DKMS commands that only work on one kernel.
+ have_one_kernel() {
+-    (( ${#kernelver[@]} > 1 )) && \
+-	die 4 $"The action $1 does not support multiple kernel version" \
+-	$"parameters on the command line."
+-    [[ $all ]] && die 5 $"The action $1 does not support the --all" \
+-	$"parameter."
++       if (( ${#kernelver[@]} != 1 )); then
++	  die 4 $"The action $1 does not support multiple kernel version" \
++	  $"parameters on the command line."
++       fi
++       if [[ $all ]]; then
++           die 5 $"The action $1 does not support the --all" \
++	   $"parameter."
++       fi
+ }
+ 
+ # Set up the kernelver and arch arrays.  You must have a 1:1 correspondence --
+@@ -230,14 +236,17 @@ setup_kernels_arches()
+ 
+ do_depmod()
+ {
++    if [[ $no_depmod ]]; then
++        return
++    fi
+     # $1 = kernel version
+     if [ "${current_os}" != "Linux" ] ; then
+         return
+     fi
+     if [[ -f /boot/System.map-$1 ]]; then
+-	/sbin/depmod -a "$1" -F "/boot/System.map-$1"
++	depmod -a "$1" -F "/boot/System.map-$1"
+     else
+-	/sbin/depmod -a "$1"
++	depmod -a "$1"
+     fi
+ }
+ 
+@@ -276,7 +285,7 @@ make_initrd()
+     echo $"(If next boot fails, revert to $initrd.old-dkms image)"
+ 
+     if [[ $mkinitrd = dracut ]]; then
+-	invoke_command "$mkinitrd $1" "$mkinitrd" background
++	invoke_command "$mkinitrd -f $initrd_dir/$initrd $1" "$mkinitrd" background
+     elif [[ $mkinitrd = update-initramfs ]]; then
+ 	invoke_command "$mkinitrd -u" "$mkinitrd" background
+     elif $mkinitrd --version >/dev/null 2>&1; then
+@@ -646,6 +655,7 @@ read_conf()
+ 
+ # Little helper function for parsing the output of modinfo.
+ get_module_verinfo(){
++    unset res
+     local vals=
+     while read -a vals; do
+ 	case ${vals[0]} in
+@@ -1270,6 +1280,28 @@ build_module()
+     echo $"DKMS: build completed."
+ }
+ 
++# Force the installation of a module if this is listed
++# in the files in $forced_modules_dir, if any
++force_installation()
++{
++    forced_modules_dir="/usr/share/dkms/modules_to_force_install"
++    to_force=""
++    if [ -d $forced_modules_dir ]; then
++        for elem in $forced_modules_dir/*; do
++            if [ -e $elem ]; then
++                to_force="$to_force $(cat $elem)"
++            fi
++        done
++
++        for elem in $to_force; do
++            if [ "${1}" = "${elem}" ]; then
++                return 0
++            fi
++        done
++    fi
++    return 1
++}
++
+ # Install a previously built module
+ # There are huge swaths of code here that special-case for various distros.
+ # They should be split into their own functions.
+@@ -1280,6 +1312,13 @@ install_module()
+     local base_dir="$dkms_tree/$module/$module_version/$kernelver/$arch"
+     check_module_args install
+ 
++    # Save the status of $force
++    tmp_force="$force"
++
++    # If the module is set to be force-installed
++    force_installation $module && echo "Forcing installation of $module" \
++        && force="true"
++
+     # Make sure that kernel exists to install into
+     [[ -e $install_tree/$kernelver ]] || die 6 \
+ 	$"The directory $install_tree/$kernelver doesn't exist." \
+@@ -1417,6 +1456,9 @@ install_module()
+     }
+     echo $""
+     echo $"DKMS: install completed."
++
++    # Restore the status of $force
++    force="$tmp_force"
+ }
+ 
+ # List each kernel object that has been installed for a particular module.
+@@ -1769,7 +1811,7 @@ module_status_weak() {
+     # $1 = module, $2 = module version, $3 = kernel version weak installed to,
+     # $4 = kernel arch, $5 = kernel version built for
+     [[ $weak_modules ]] || return 1
+-    local weak_ko mod installed_ko f ret=1 oifs=$IFS
++    local m v k a weak_ko mod installed_ko f ret=1 oifs=$IFS
+     local -a already_found
+     for weak_ko in "$install_tree/"*/weak-updates/*; do
+ 	[[ -e $weak_ko ]] || continue
+@@ -3392,6 +3434,7 @@ try_source_tree=''
+ die_is_fatal="yes"
+ [ -x /sbin/weak-modules ] && weak_modules='/sbin/weak-modules'
+ [ -x /usr/lib/module-init-tools/weak-modules ] && weak_modules='/usr/lib/module-init-tools/weak-modules'
++no_depmod=""
+ 
+ action_re='^(remove|(auto|un)?install|match|mk(driverdisk|tarball|rpm|deb|dsc|kmp)|build|add|status|ldtarball)$'
+ 
+@@ -3437,6 +3480,7 @@ while (($# > 0)); do
+ 	--directive*)        read_arg _da "$1" "$2" || shift
+ 			     directive_array[${#directive_array[@]}]="$_da";;
+ 	--spec*)             read_arg specfile "$1" "$2" || shift;;
++	--no-depmod)         no_depmod="true";;
+ 	--debug)
+ 	    export PS4='${BASH_SOURCE}@${LINENO}(${FUNCNAME[0]}): '
+ 	    set -x;;
+@@ -3488,6 +3532,11 @@ if [[ $arch && $all ]]; then
+ fi
+ 
+ # Run the specified action
++if [ -z "$action" ]; then
++    show_usage
++    die 4 $"No action was specified."
++fi
++
+ for action_to_run in $action; do
+     setup_kernels_arches "$action_to_run"
+     case "$action_to_run" in
+diff --git a/dkms.8 b/dkms.8
+index 908d9db..e782d53 100644
+--- a/dkms.8
++++ b/dkms.8
+@@ -464,6 +464,13 @@ ensure that modules are compiled correctly.
+ This option keeps DKMS from cleaning your kernel source tree after a
+ build.
+ .TP
++.B \-\-no\-depmod
++This option prevents DKMS from running the depmod command during
++.B install
++and
++.B uninstall
++which will avoid (re)calculating module dependencies and thereby save time.
++.TP
+ .B \-\-kernelsourcedir <kernel\-source\-directory\-location>
+ Using this option you can specify the location of your kernel source
+ directory.  Most likely you will not need to set this if your kernel
+diff --git a/dkms.spec b/dkms.spec
+index 49717aa..aba685d 100644
+--- a/dkms.spec
++++ b/dkms.spec
+@@ -5,7 +5,7 @@ Release: 1%{?dist}
+ License: GPLv2+
+ Group: System Environment/Base
+ BuildArch: noarch
+-Requires: sed gawk findutils modutils tar cpio gzip grep mktemp
++Requires: sed gawk findutils modutils tar cpio gzip grep coreutils
+ Requires: bash > 1.99
+ # because Mandriva calls this package dkms-minimal
+ Provides: dkms-minimal = %{version}
+@@ -113,7 +113,6 @@ rm -rf $RPM_BUILD_ROOT
+ 
+ 
+ %post
+-[ -e /sbin/dkms ] && mv -f /sbin/dkms /sbin/dkms.old 2>/dev/null
+ # enable on initial install
+ [ $1 -lt 2 ] && /sbin/chkconfig dkms_autoinstaller on ||:
+ 

@@ -1,8 +1,8 @@
 #!/bin/sh
 #
-# dkms - A service to automatically install DKMS modules for new kernels.
+# dkms_autoinstaller - A service to automatically install DKMS modules for new kernels.
 #
-# chkconfig: 345 04 -
+# chkconfig: 345 04 04
 # description: Compiles and install kernel modules automatically for new \
 #              kernels at boot.
 
@@ -37,7 +37,11 @@ case "$1" in
     start)
         $1
         ;;
+    stop)
+        # There is no stop action, this and the 04 priority during stop is
+        # added to make chkconfig happy.
+        ;;
     *)
-        echo $"Usage: $0 {start}"
+        echo $"Usage: $0 {start|stop}"
         exit 2
 esac
