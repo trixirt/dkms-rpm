@@ -5,7 +5,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        7%{dist}
+Release:        8%{dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
@@ -25,7 +25,11 @@ Requires:       gcc
 Requires:       grep
 Requires:       gzip
 Requires:       kernel-devel
+%if 0%{?fedora} || 0%{?rhel} >= 7
 Requires:       kmod
+%else
+Requires:       module-init-tools
+%endif
 Requires:       sed
 Requires:       tar
 
@@ -140,6 +144,9 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Mon Jun 24 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-8
+- Do not use kmod on RHEL 5/6.
+
 * Thu Jun 20 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-7
 - Update to upstream git.
 - Fix SysV init scriptlet and init file.
