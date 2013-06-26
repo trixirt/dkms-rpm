@@ -5,7 +5,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        8%{dist}
+Release:        9%{dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
@@ -34,6 +34,7 @@ Requires:       sed
 Requires:       tar
 
 %if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
+BuildRequires:          systemd
 Requires(post):         systemd-sysv
 Requires(post):         systemd
 Requires(preun):        systemd
@@ -144,6 +145,9 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Wed Jun 26 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-9
+- Update systemd requirements.
+
 * Mon Jun 24 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-8
 - Do not use kmod on RHEL 5/6.
 
