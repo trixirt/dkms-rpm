@@ -5,7 +5,7 @@ Documentation=man:dkms(8)
 [Service]
 Type=oneshot
 RemainAfterExit=true
-ExecStart=-/usr/sbin/dkms autoinstall --kernelver $(uname -r)
+ExecStart=/bin/sh -c 'dkms autoinstall --verbose --kernelver $(uname -r)'
 
 [Install]
 WantedBy=multi-user.target

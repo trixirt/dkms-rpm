@@ -5,7 +5,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        10%{dist}
+Release:        11%{dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
@@ -145,6 +145,9 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Thu Jul 04 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-11
+- Make service file more verbose.
+
 * Sat Jun 29 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-10
 - Fix SysV/systemd upgrade.
 
