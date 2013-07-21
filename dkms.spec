@@ -5,7 +5,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        11%{dist}
+Release:        12%{dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
@@ -16,6 +16,7 @@ Source0:        http://linux.dell.com/%{name}/permalink/%{name}-%{version}.tar.g
 Source1:        %{name}.service
 Source2:        %{name}_autoinstaller.init
 Patch0:         %{name}-git.patch
+Patch1:         %{name}-fix-variables.patch
 
 Requires:       coreutils
 Requires:       cpio
@@ -53,6 +54,7 @@ method for installing module RPMS as originally developed by Dell.
 %prep
 %setup -q -n dkms
 %patch0 -p1
+%patch1 -p1
 
 %build
 
@@ -145,6 +147,9 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Sun Jul 21 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-12
+- Add patch for #986557.
+
 * Thu Jul 04 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-11
 - Make service file more verbose.
 
