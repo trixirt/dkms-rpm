@@ -5,7 +5,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        13%{dist}
+Release:        14%{dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
@@ -36,7 +36,6 @@ Requires:       tar
 
 %if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
 BuildRequires:          systemd
-Requires(post):         systemd-sysv
 Requires(post):         systemd
 Requires(preun):        systemd
 Requires(postun):       systemd
@@ -88,19 +87,6 @@ rm -rf %{buildroot}
 
 %if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
 
-%triggerun -- dkms < 2.2.0.3-9
-# Save the current service runlevel info
-# User must manually run systemd-sysv-convert --apply httpd
-# to migrate them to systemd targets
-/usr/bin/systemd-sysv-convert --save %{name}_autoinstaller >/dev/null 2>&1 ||:
-
-# If the package is allowed to autostart:
-/bin/systemctl --no-reload enable %{name}.service >/dev/null 2>&1 ||:
-
-# Run these because the SysV package being removed won't do them
-/sbin/chkconfig --del %{name}_autoinstaller >/dev/null 2>&1 || :
-/bin/systemctl try-restart %{name}.service >/dev/null 2>&1 || :
-
 %post
 %systemd_post %{name}_autoinstaller.service
 
@@ -147,6 +133,9 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Mon Jul 22 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-14
+- Remove systemd / SysV conversion as per new packaging guidelines.
+
 * Mon Jul 22 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-13
 - Add fix for #986887; do not use lib64 for storing data as it was in 2.2.0.3-5.
 
