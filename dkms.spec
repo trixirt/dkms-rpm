@@ -17,6 +17,7 @@ Source1:        %{name}.service
 Source2:        %{name}_autoinstaller.init
 Patch0:         %{name}-git.patch
 Patch1:         %{name}-fix-variables.patch
+Patch2:         %{name}-force-tarball.patch
 
 Requires:       coreutils
 Requires:       cpio
@@ -54,6 +55,7 @@ method for installing module RPMS as originally developed by Dell.
 %setup -q -n dkms
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 
@@ -135,6 +137,7 @@ fi
 %changelog
 * Mon Jul 22 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-14
 - Remove systemd / SysV conversion as per new packaging guidelines.
+- Add patch for #986887 to force tarball creation.
 
 * Mon Jul 22 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-13
 - Add fix for #986887; do not use lib64 for storing data as it was in 2.2.0.3-5.

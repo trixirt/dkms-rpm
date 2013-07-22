@@ -1,0 +1,16 @@
+diff -Naur dkms.old/dkms dkms/dkms
+--- dkms.old/dkms	2013-07-22 13:00:36.395130459 +0200
++++ dkms/dkms	2013-07-22 15:47:42.895163643 +0200
+@@ -2524,9 +2524,9 @@
+ 	die 6 $"Failed to make tarball."
+     fi
+     case $tarball_ext in
+-	gz) gzip -9 "$tarball_dest/$tarball_name";;
+-	bz2) bzip2 -9 "$tarball_dest/$tarball_name";;
+-	xz) xz -9 "$tarball_dest/$tarball_name";;
++	gz) gzip --force -9 "$tarball_dest/$tarball_name";;
++	bz2) bzip2 --force -9 "$tarball_dest/$tarball_name";;
++	xz) xz --force -9 "$tarball_dest/$tarball_name";;
+     esac
+     echo $""
+     echo $"DKMS: mktarball completed."
