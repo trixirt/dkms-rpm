@@ -5,7 +5,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        12%{dist}
+Release:        13%{dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
@@ -66,7 +66,7 @@ make install-redhat DESTDIR=%{buildroot} \
     MAN=%{buildroot}%{_mandir}/man8 \
     ETC=%{buildroot}%{_sysconfdir}/%{name} \
     BASHDIR=%{buildroot}%{_sysconfdir}/bash_completion.d \
-    LIBDIR=%{buildroot}%{_libdir}/%{name}
+    LIBDIR=%{buildroot}%{_prefix}/lib/%{name}
 
 %if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
 
@@ -137,7 +137,7 @@ fi
 %else
 %{_initrddir}/%{name}_autoinstaller
 %endif
-%{_libdir}/%{name}
+%{_prefix}/lib/%{name}
 %{_mandir}/man8/dkms.8*
 %{_sbindir}/%{name}
 %{_sharedstatedir}/%{name}
@@ -147,6 +147,9 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Mon Jul 22 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-13
+- Add fix for #986887; do not use lib64 for storing data as it was in 2.2.0.3-5.
+
 * Sun Jul 21 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-12
 - Add patch for #986557.
 
