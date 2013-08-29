@@ -1,0 +1,12 @@
+diff -Naur dkms.old/template-dkms-mkrpm.spec dkms/template-dkms-mkrpm.spec
+--- dkms.old/template-dkms-mkrpm.spec	2013-08-29 15:30:10.120598818 +0200
++++ dkms/template-dkms-mkrpm.spec	2013-08-29 15:31:00.768140170 +0200
+@@ -52,7 +52,7 @@
+ fi
+ 
+ %post
+-for POSTINST in %{_libdir}/dkms/common.postinst %{_datarootdir}/%{module_name}/postinst; do
++for POSTINST in %{_dkmsdir}/dkms/common.postinst %{_datarootdir}/%{module_name}/postinst; do
+         if [ -f $POSTINST ]; then
+                 $POSTINST %{module_name} %{version} %{_datarootdir}/%{module_name}
+                 exit $?

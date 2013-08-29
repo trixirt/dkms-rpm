@@ -5,7 +5,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        15%{dist}
+Release:        16%{dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
@@ -18,6 +18,7 @@ Source2:        %{name}_autoinstaller.init
 Patch0:         %{name}-git.patch
 Patch1:         %{name}-fix-variables.patch
 Patch2:         %{name}-force-tarball.patch
+Patch3:         %{name}-fix-mkrpm.patch
 
 Requires:       coreutils
 Requires:       cpio
@@ -56,6 +57,7 @@ method for installing module RPMS as originally developed by Dell.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 
@@ -135,6 +137,9 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Thu Aug 29 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-16
+- Add patch to fix mkrpm spec file template in #1002551.
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.0.3-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
