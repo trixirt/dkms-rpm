@@ -5,7 +5,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        16%{dist}
+Release:        17%{dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
@@ -137,6 +137,9 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Thu Aug 29 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-17
+- Add propert patch for 1002551.
+
 * Thu Aug 29 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-16
 - Add patch to fix mkrpm spec file template in #1002551.
 
