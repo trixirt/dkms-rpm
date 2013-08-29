@@ -6,7 +6,7 @@ diff -Naur dkms.old/template-dkms-mkrpm.spec dkms/template-dkms-mkrpm.spec
  
  %post
 -for POSTINST in %{_libdir}/dkms/common.postinst %{_datarootdir}/%{module_name}/postinst; do
-+for POSTINST in %{_dkmsdir}/dkms/common.postinst %{_datarootdir}/%{module_name}/postinst; do
++for POSTINST in %{_dkmsdir}/common.postinst %{_datarootdir}/%{module_name}/postinst; do
          if [ -f $POSTINST ]; then
                  $POSTINST %{module_name} %{version} %{_datarootdir}/%{module_name}
                  exit $?
