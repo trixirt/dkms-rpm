@@ -5,7 +5,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        17%{dist}
+Release:        18%{dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
@@ -19,6 +19,12 @@ Patch0:         %{name}-git.patch
 Patch1:         %{name}-fix-variables.patch
 Patch2:         %{name}-force-tarball.patch
 Patch3:         %{name}-fix-mkrpm.patch
+# Patches coming from ZFS On Linux project for functionality / bugfixes
+# https://github.com/zfsonlinux/dkms/tree/master/ubuntu/saucy/debian/patches
+Patch4:         %{name}-use-STRIP-0-as-the-default-for-the-STRIP-array.patch
+Patch5:         %{name}-add_BUILD_DEPENDS.patch
+Patch6:         %{name}-cleanup-after-removal.patch
+Patch7:         %{name}-do-not-fail-on-modules-dir.patch
 
 Requires:       coreutils
 Requires:       cpio
@@ -58,6 +64,10 @@ method for installing module RPMS as originally developed by Dell.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
 
 %build
 
@@ -137,6 +147,9 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Mon Nov 04 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-18
+- Add ZFS On Linux patches for additional functionality / bugfixes.
+
 * Thu Aug 29 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-17
 - Add propert patch for 1002551.
 
