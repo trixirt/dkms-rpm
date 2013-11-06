@@ -1,7 +1,15 @@
-diff -Naur dkms.old/dkms dkms/dkms
---- dkms.old/dkms	2013-11-04 16:37:44.383701334 +0100
-+++ dkms/dkms	2013-11-04 16:38:15.663417165 +0100
-@@ -1622,6 +1622,9 @@
+From: Andreas Beckmann <debian@abeckmann.de>
+Subject: remove the directory where the module was installed
+ after removing a module try to remove the path (below
+ /lib/modules/KVERS) were the module was installed to cleanup any
+ remaining empty directories
+Bug-Debian: http://bugs.debian.org/657145
+
+diff --git a/dkms b/dkms
+index 042acc0..c96cd8f 100644
+--- dkms.old/dkms	2013-11-06 10:50:21.452660834 +0100
++++ dkms/dkms	2013-11-06 10:50:26.685549748 +0100
+@@ -1621,6 +1621,9 @@
  	    echo $" - Uninstallation"
  	    echo $"   - Deleting from: $install_tree/$1${real_dest_module_location}/"
  	    rm -f "$install_tree/$1${real_dest_module_location}/${dest_module_name[$count]}$module_suffix"

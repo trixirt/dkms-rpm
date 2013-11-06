@@ -5,7 +5,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        18%{dist}
+Release:        19%{dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
@@ -15,16 +15,21 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}.%{release}-root-%(%{__id_u} -n)
 Source0:        http://linux.dell.com/%{name}/permalink/%{name}-%{version}.tar.gz
 Source1:        %{name}.service
 Source2:        %{name}_autoinstaller.init
+
 Patch0:         %{name}-git.patch
-Patch1:         %{name}-fix-variables.patch
-Patch2:         %{name}-force-tarball.patch
-Patch3:         %{name}-fix-mkrpm.patch
+Patch1:         %{name}-force-tarball.patch
+Patch2:         %{name}-fix-mkrpm.patch
+Patch3:         %{name}-man.patch
 # Patches coming from ZFS On Linux project for functionality / bugfixes
 # https://github.com/zfsonlinux/dkms/tree/master/ubuntu/saucy/debian/patches
-Patch4:         %{name}-use-STRIP-0-as-the-default-for-the-STRIP-array.patch
-Patch5:         %{name}-add_BUILD_DEPENDS.patch
-Patch6:         %{name}-cleanup-after-removal.patch
-Patch7:         %{name}-do-not-fail-on-modules-dir.patch
+Patch4:         %{name}-cleanup-after-removal.patch
+Patch5:         %{name}-do-not-fail-on-modules-dir.patch
+# https://github.com/zfsonlinux/dkms/tree/master/ubuntu/precise/debian/patches
+Patch6:         %{name}-add-POST_BUILD-to-the-dkms_conf_variables-list.patch
+Patch7:         %{name}-use-STRIP-0-as-the-default-for-the-STRIP-array.patch
+Patch8:         %{name}-add-dependency-logic-for-automatic-builds.patch
+Patch9:         %{name}-fix-zfs-autoinstall-failures-for-kernel-upgrades.patch
+Patch10:        %{name}-reset-build-dependencies.patch
 
 Requires:       coreutils
 Requires:       cpio
@@ -68,6 +73,10 @@ method for installing module RPMS as originally developed by Dell.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+cp %{SOURCE3} .
 
 %build
 
@@ -132,6 +141,7 @@ fi
 %files
 %defattr(-,root,root)
 %doc sample.spec sample.conf AUTHORS COPYING README.dkms
+%doc dkms-ZFSOnLinux-patches.txt
 %if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
 %{_unitdir}/%{name}.service
 %else
@@ -147,8 +157,13 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Wed Nov 06 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-19
+- Add macros to the top of the man page to fix displaying on el5/el6 (#986660).
+  Thanks to Darik Horn for the fix.
+
 * Mon Nov 04 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-18
-- Add ZFS On Linux patches for additional functionality / bugfixes.
+- Add ZFS On Linux patches for additional functionality/bugfixes (#1023598).
+  Thanks to Darik Horn and Brian Behlendorf.
 
 * Thu Aug 29 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-17
 - Add propert patch for 1002551.
