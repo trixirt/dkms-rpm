@@ -76,7 +76,6 @@ method for installing module RPMS as originally developed by Dell.
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
-cp %{SOURCE3} .
 
 %build
 
