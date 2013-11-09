@@ -5,7 +5,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        19%{dist}
+Release:        20%{dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
@@ -73,9 +73,11 @@ method for installing module RPMS as originally developed by Dell.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%if 0%{?fedora} || 0%{?rhel} >= 6
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
+%endif
 
 %build
 
@@ -155,6 +157,9 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Thu Nov 07 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-20
+- Exclude build dependency logic for RHEL/CentOS 5.
+
 * Wed Nov 06 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-19
 - Add macros to the top of the man page to fix displaying on el5/el6 (#986660).
   Thanks to Darik Horn for the fix.
