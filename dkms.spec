@@ -5,7 +5,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        20%{dist}
+Release:        21%{dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
@@ -64,7 +64,7 @@ This package contains the framework for the Dynamic Kernel Module Support (DKMS)
 method for installing module RPMS as originally developed by Dell.
 
 %prep
-%setup -q -n dkms
+%setup -q
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -157,6 +157,9 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Fri Jan 17 2014 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-21
+- Adjust directory extraction due to regenerated tarball upstream.
+
 * Thu Nov 07 2013 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-20
 - Exclude build dependency logic for RHEL/CentOS 5.
 
