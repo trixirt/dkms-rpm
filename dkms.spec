@@ -5,7 +5,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        22%{dist}
+Release:        23%{dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
@@ -30,6 +30,7 @@ Patch7:         %{name}-use-STRIP-0-as-the-default-for-the-STRIP-array.patch
 Patch8:         %{name}-add-dependency-logic-for-automatic-builds.patch
 Patch9:         %{name}-fix-zfs-autoinstall-failures-for-kernel-upgrades.patch
 Patch10:        %{name}-reset-build-dependencies.patch
+Patch11:        %{name}-bash-syntax-fix.patch
 
 Requires:       coreutils
 Requires:       cpio
@@ -77,6 +78,7 @@ method for installing module RPMS as originally developed by Dell.
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
+%patch11 -p1
 %endif
 
 %build
@@ -157,6 +159,9 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Tue Jun 17 2014 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-23
+- Update shell syntax (#1104253).
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.0.3-22
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
