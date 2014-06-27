@@ -1,0 +1,31 @@
+From 02c9c3cb070383fe5842ab779f0c8da7c60c8229 Mon Sep 17 00:00:00 2001
+From: Julien Floret <julien.floret@6wind.com>
+Date: Fri, 27 Jun 2014 10:36:08 +0200
+Subject: [PATCH] Prevent parallel depmod failure with autoinstall
+
+Do not run install_module in parallel in dkms_autoinstall.
+
+This commit prevents race conditions between several depmod instances
+which may result in installation failures.
+
+Signed-off-by: Julien Floret <julien.floret@6wind.com>
+---
+ dkms |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/dkms b/dkms
+index 00dd597..01495c2 100644
+--- a/dkms
++++ b/dkms
+@@ -3241,7 +3241,7 @@ autoinstall() {
+ 		for mv in "${to_install[@]}"; do
+ 			IFS=/ read m v <<< "$mv"
+ 			if [[ -z "${build_depends[$m]}" ]]; then
+-				(module="$m"; module_version="$v"; install_module) &
++				(module="$m"; module_version="$v"; install_module)
+ 				installed_modules[${#installed_modules[@]}]="$m"
+ 				install_count=$(($install_count +1))
+ 			else
+-- 
+1.7.10.4
+

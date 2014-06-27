@@ -5,7 +5,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        23%{dist}
+Release:        24%{dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
@@ -31,6 +31,7 @@ Patch8:         %{name}-add-dependency-logic-for-automatic-builds.patch
 Patch9:         %{name}-fix-zfs-autoinstall-failures-for-kernel-upgrades.patch
 Patch10:        %{name}-reset-build-dependencies.patch
 Patch11:        %{name}-bash-syntax-fix.patch
+Patch12:        %{name}-no-parallel-build.patch
 
 Requires:       coreutils
 Requires:       cpio
@@ -79,6 +80,7 @@ method for installing module RPMS as originally developed by Dell.
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
+%patch12 -p1
 %endif
 
 %build
@@ -159,6 +161,9 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Fri Jun 27 2014 Julien Floret <julien.floret@6wind.com> - 2.2.0.3-24
+- Prevent parallel depmod failure with autoinstall (#1113946).
+
 * Tue Jun 17 2014 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-23
 - Update shell syntax (#1104253).
 
