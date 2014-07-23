@@ -5,7 +5,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        24%{dist}
+Release:        25%{dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
