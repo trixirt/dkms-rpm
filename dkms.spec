@@ -20,6 +20,7 @@ Patch0:         %{name}-git.patch
 Patch1:         %{name}-force-tarball.patch
 Patch2:         %{name}-fix-mkrpm.patch
 Patch3:         %{name}-man.patch
+
 # Patches coming from ZFS On Linux project for functionality / bugfixes
 # https://github.com/zfsonlinux/dkms/tree/master/ubuntu/saucy/debian/patches
 Patch4:         %{name}-cleanup-after-removal.patch
@@ -30,8 +31,10 @@ Patch7:         %{name}-use-STRIP-0-as-the-default-for-the-STRIP-array.patch
 Patch8:         %{name}-add-dependency-logic-for-automatic-builds.patch
 Patch9:         %{name}-fix-zfs-autoinstall-failures-for-kernel-upgrades.patch
 Patch10:        %{name}-reset-build-dependencies.patch
+
 Patch11:        %{name}-bash-syntax-fix.patch
 Patch12:        %{name}-no-parallel-build.patch
+Patch13:        %{name}-skip-initrd-build.patch
 
 Requires:       coreutils
 Requires:       cpio
@@ -75,13 +78,12 @@ method for installing module RPMS as originally developed by Dell.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%if 0%{?fedora} || 0%{?rhel} >= 6
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
-%endif
+%patch13 -p1
 
 %build
 
@@ -161,6 +163,10 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Fri Jun 27 2014 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-25
+- Enable all patches also for RHEL 5 builds.
+- Skip initramfs/initrd rebuild if not requested (#1109601).
+
 * Fri Jun 27 2014 Julien Floret <julien.floret@6wind.com> - 2.2.0.3-24
 - Prevent parallel depmod failure with autoinstall (#1113946).
 

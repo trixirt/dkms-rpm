@@ -1,0 +1,37 @@
+diff -Naur dkms-2.2.0.3.old/dkms dkms-2.2.0.3/dkms
+--- dkms-2.2.0.3.old/dkms	2014-06-27 16:30:06.479277266 +0200
++++ dkms-2.2.0.3/dkms	2014-07-23 17:50:46.178460521 +0200
+@@ -1432,7 +1432,7 @@
+     # add to kabi-tracking
+     if [[ ${weak_modules} ]]; then
+ 	echo $"Adding any weak-modules"
+-	list_each_installed_module "$module" "$kernelver" "$arch" | ${weak_modules} --add-modules
++	list_each_installed_module "$module" "$kernelver" "$arch" | ${weak_modules} ${weak_modules_no_initrd} --add-modules
+     fi
+ 
+     # Run the post_install script
+@@ -1613,7 +1613,7 @@
+ 	if [[ ${weak_modules} ]] && \
+ 	    (module_status_built $module $module_version |grep -q "installed"); then
+ 	    echo $"Removing any linked weak-modules"
+-	    list_each_installed_module "$module" "$1" "$2" | ${weak_modules} --remove-modules
++	    list_each_installed_module "$module" "$1" "$2" | ${weak_modules} ${weak_modules_no_initrd} --remove-modules
+ 	fi
+ 
+ 	for ((count=0; count < ${#built_module_name[@]}; count++)); do
+@@ -3586,6 +3586,15 @@
+ 	$"--all on the command line."
+ fi
+ 
++# If initramfs/initrd rebuild is not requested, skip it with Redhat's weak-modules
++if [[ $no_initrd && $weak_modules ]]; then
++    if [[ $running_distribution == el5 ]]; then
++        weak_modules_no_initrd="--no-initrd"
++    else
++        weak_modules_no_initrd="--no-initramfs"
++    fi
++fi
++
+ # Run the specified action
+ if [ -z "$action" ]; then
+     show_usage
