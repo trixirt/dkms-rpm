@@ -5,7 +5,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        25%{dist}
+Release:        26%{dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
@@ -163,6 +163,9 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Mon Sep 08 2014 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-26
+- Further syntax fix (#1139006). Thanks Goffredo Baroncelli.
+
 * Fri Jun 27 2014 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-25
 - Enable all patches also for RHEL 5 builds.
 - Skip initramfs/initrd rebuild if not requested (#1109601).
