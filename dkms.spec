@@ -1,3 +1,6 @@
+%global commit 2238e7b8a894162e30831b325337483e1c0ac787
+%global shortcommit %(c=%{commit}; echo ${c:0:7})
+
 %if 0%{?rhel} == 5
 %define _sharedstatedir /var/lib
 %endif
@@ -5,36 +8,19 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        26%{dist}
+Release:        27%{?shortcommit:.git.%{shortcommit}}%{?dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
 URL:            http://linux.dell.com/dkms
 BuildRoot:      %{_tmppath}/%{name}-%{version}.%{release}-root-%(%{__id_u} -n)
 
-Source0:        http://linux.dell.com/%{name}/permalink/%{name}-%{version}.tar.gz
-Source1:        %{name}.service
+Source0:        http://linux.dell.com/cgi-bin/cgit.cgi/%{name}.git/snapshot/%{name}-%{commit}.tar.bz2
 Source2:        %{name}_autoinstaller.init
 
-Patch0:         %{name}-git.patch
-Patch1:         %{name}-force-tarball.patch
-Patch2:         %{name}-fix-mkrpm.patch
-Patch3:         %{name}-man.patch
-
-# Patches coming from ZFS On Linux project for functionality / bugfixes
-# https://github.com/zfsonlinux/dkms/tree/master/ubuntu/saucy/debian/patches
-Patch4:         %{name}-cleanup-after-removal.patch
-Patch5:         %{name}-do-not-fail-on-modules-dir.patch
-# https://github.com/zfsonlinux/dkms/tree/master/ubuntu/precise/debian/patches
-Patch6:         %{name}-add-POST_BUILD-to-the-dkms_conf_variables-list.patch
-Patch7:         %{name}-use-STRIP-0-as-the-default-for-the-STRIP-array.patch
-Patch8:         %{name}-add-dependency-logic-for-automatic-builds.patch
-Patch9:         %{name}-fix-zfs-autoinstall-failures-for-kernel-upgrades.patch
-Patch10:        %{name}-reset-build-dependencies.patch
-
-Patch11:        %{name}-bash-syntax-fix.patch
-Patch12:        %{name}-no-parallel-build.patch
-Patch13:        %{name}-skip-initrd-build.patch
+Patch0:         %{name}-Makefile.patch
+Patch1:         %{name}-fix-inter-module-dependencies.patch
+Patch2:         %{name}-format.patch
 
 Requires:       coreutils
 Requires:       cpio
@@ -69,47 +55,26 @@ This package contains the framework for the Dynamic Kernel Module Support (DKMS)
 method for installing module RPMS as originally developed by Dell.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{commit}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
-%patch11 -p1
-%patch12 -p1
-%patch13 -p1
 
 %build
 
 %install
 rm -rf %{buildroot}
-make install-redhat DESTDIR=%{buildroot} \
-    SBIN=%{buildroot}%{_sbindir} \
-    VAR=%{buildroot}%{_sharedstatedir}/%{name} \
-    MAN=%{buildroot}%{_mandir}/man8 \
-    ETC=%{buildroot}%{_sysconfdir}/%{name} \
-    BASHDIR=%{buildroot}%{_sysconfdir}/bash_completion.d \
-    LIBDIR=%{buildroot}%{_prefix}/lib/%{name}
 
 %if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
-
-# Systemd unit files
-rm -rf %{buildroot}%{_initrddir}
-mkdir -p %{buildroot}%{_unitdir}
-install -p -m 644 -D %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
-
+make install-redhat-systemd DESTDIR=%{buildroot} \
+    LIBDIR=%{buildroot}%{_prefix}/lib/%{name} \
+    SYSTEMD=%{buildroot}%{_unitdir}
 %else
+make install-redhat-sysv DESTDIR=%{buildroot} \
+    LIBDIR=%{buildroot}%{_prefix}/lib/%{name}
 
-# Initscripts
-mkdir -p %{buildroot}%{_initrddir}
+# Overwrite SysV init script
 install -p -m 755 -D %{SOURCE2} %{buildroot}%{_initrddir}/%{name}_autoinstaller
-
 %endif
 
 %clean
@@ -163,6 +128,12 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Tue Sep 23 2014 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-27.git.2238e7b
+- Update to latest git, 99% of the patches merged upstream.
+- Simplify SPEC file.
+- Fix inter-module dependencies (#1140812).
+  Thanks Bruno Faccini.
+
 * Mon Sep 08 2014 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-26
 - Further syntax fix (#1139006). Thanks Goffredo Baroncelli.
 
