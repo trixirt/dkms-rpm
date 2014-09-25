@@ -1,4 +1,4 @@
-%global commit 2238e7b8a894162e30831b325337483e1c0ac787
+%global commit 7c3e7c52a3816c82fc8a0ef4bed9cebedc9dd02d
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 %if 0%{?rhel} == 5
@@ -8,7 +8,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        27%{?shortcommit:.git.%{shortcommit}}%{?dist}
+Release:        28%{?shortcommit:.git.%{shortcommit}}%{?dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
@@ -16,11 +16,7 @@ URL:            http://linux.dell.com/dkms
 BuildRoot:      %{_tmppath}/%{name}-%{version}.%{release}-root-%(%{__id_u} -n)
 
 Source0:        http://linux.dell.com/cgi-bin/cgit.cgi/%{name}.git/snapshot/%{name}-%{commit}.tar.bz2
-Source2:        %{name}_autoinstaller.init
-
-Patch0:         %{name}-Makefile.patch
-Patch1:         %{name}-fix-inter-module-dependencies.patch
-Patch2:         %{name}-format.patch
+Source1:        %{name}_autoinstaller.init
 
 Requires:       coreutils
 Requires:       cpio
@@ -56,9 +52,6 @@ method for installing module RPMS as originally developed by Dell.
 
 %prep
 %setup -q -n %{name}-%{commit}
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 %build
 
@@ -74,7 +67,7 @@ make install-redhat-sysv DESTDIR=%{buildroot} \
     LIBDIR=%{buildroot}%{_prefix}/lib/%{name}
 
 # Overwrite SysV init script
-install -p -m 755 -D %{SOURCE2} %{buildroot}%{_initrddir}/%{name}_autoinstaller
+install -p -m 755 -D %{SOURCE1} %{buildroot}%{_initrddir}/%{name}_autoinstaller
 %endif
 
 %clean
@@ -128,6 +121,9 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Tue Sep 23 2014 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-28.git.7c3e7c5
+- Update to latest git, all patches merged upstream.
+
 * Tue Sep 23 2014 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-27.git.2238e7b
 - Update to latest git, 99% of the patches merged upstream.
 - Simplify SPEC file.
