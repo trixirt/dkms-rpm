@@ -8,7 +8,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        28%{?shortcommit:.git.%{shortcommit}}%{?dist}
+Release:        29%{?shortcommit:.git.%{shortcommit}}%{?dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
@@ -105,7 +105,9 @@ fi
 
 %files
 %defattr(-,root,root)
-%doc sample.spec sample.conf AUTHORS COPYING README.dkms
+%{!?_licensedir:%global license %%doc}
+%license COPYING
+%doc sample.spec sample.conf AUTHORS README.dkms
 %if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
 %{_unitdir}/%{name}.service
 %else
@@ -121,6 +123,10 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Tue Feb 24 2015 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-29.git.7c3e7c5
+- Add which and file requirements (#1194652).
+- Add license macro.
+
 * Tue Sep 23 2014 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-28.git.7c3e7c5
 - Update to latest git, all patches merged upstream.
 
