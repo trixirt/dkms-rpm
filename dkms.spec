@@ -8,7 +8,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        29%{?shortcommit:.git.%{shortcommit}}%{?dist}
+Release:        30%{?shortcommit:.git.%{shortcommit}}%{?dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
@@ -20,6 +20,7 @@ Source1:        %{name}_autoinstaller.init
 
 Requires:       coreutils
 Requires:       cpio
+Requires:       file
 Requires:       findutils
 Requires:       gawk
 Requires:       gcc
@@ -33,6 +34,7 @@ Requires:       module-init-tools
 %endif
 Requires:       sed
 Requires:       tar
+Requires:       which
 
 %if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
 BuildRequires:          systemd
@@ -123,6 +125,9 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Wed Feb 25 2015 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-30.git.7c3e7c5
+- Add which and file requirements for real.
+
 * Tue Feb 24 2015 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-29.git.7c3e7c5
 - Add which and file requirements (#1194652).
 - Add license macro.
