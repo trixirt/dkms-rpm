@@ -8,7 +8,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        31%{?shortcommit:.git.%{shortcommit}}%{?dist}
+Release:        32%{?shortcommit:.git.%{shortcommit}}%{?dist}
 License:        GPLv2+
 Group:          System Environment/Base
 BuildArch:      noarch
@@ -125,6 +125,9 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 2.2.0.3-32.git.7c3e7c5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.0.3-31.git.7c3e7c5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
