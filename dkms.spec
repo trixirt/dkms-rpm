@@ -1,21 +1,16 @@
-%global commit 7c3e7c52a3816c82fc8a0ef4bed9cebedc9dd02d
-%global shortcommit %(c=%{commit}; echo ${c:0:7})
-
-%if 0%{?rhel} == 5
-%define _sharedstatedir /var/lib
-%endif
+%global commit0 4c69692cf3d699f84faf4f21d82f48d4d9103404
+%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        32%{?shortcommit:.git.%{shortcommit}}%{?dist}
+Release:        33%{?shortcommit0:.git.%{shortcommit0}}%{?dist}
 License:        GPLv2+
-Group:          System Environment/Base
-BuildArch:      noarch
 URL:            http://linux.dell.com/dkms
-BuildRoot:      %{_tmppath}/%{name}-%{version}.%{release}-root-%(%{__id_u} -n)
 
-Source0:        http://linux.dell.com/cgi-bin/cgit.cgi/%{name}.git/snapshot/%{name}-%{commit}.tar.bz2
+BuildArch:      noarch
+
+Source0:        https://github.com/dell-oss/%{name}/archive/%{commit0}/%{name}-%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
 Source1:        %{name}_autoinstaller.init
 
 Requires:       coreutils
@@ -36,7 +31,7 @@ Requires:       sed
 Requires:       tar
 Requires:       which
 
-%if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
+%if 0%{?fedora} || 0%{?rhel} >= 7
 BuildRequires:          systemd
 Requires(post):         systemd
 Requires(preun):        systemd
@@ -53,14 +48,12 @@ This package contains the framework for the Dynamic Kernel Module Support (DKMS)
 method for installing module RPMS as originally developed by Dell.
 
 %prep
-%setup -q -n %{name}-%{commit}
-
-%build
+%setup -qn %{name}-%{commit0}
 
 %install
 rm -rf %{buildroot}
 
-%if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
+%if 0%{?fedora} || 0%{?rhel} >= 7
 make install-redhat-systemd DESTDIR=%{buildroot} \
     LIBDIR=%{buildroot}%{_prefix}/lib/%{name} \
     SYSTEMD=%{buildroot}%{_unitdir}
@@ -72,10 +65,7 @@ make install-redhat-sysv DESTDIR=%{buildroot} \
 install -p -m 755 -D %{SOURCE1} %{buildroot}%{_initrddir}/%{name}_autoinstaller
 %endif
 
-%clean
-rm -rf %{buildroot}
-
-%if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
+%if 0%{?fedora} || 0%{?rhel} >= 7
 
 %post
 %systemd_post %{name}_autoinstaller.service
@@ -106,11 +96,10 @@ fi
 %endif
 
 %files
-%defattr(-,root,root)
 %{!?_licensedir:%global license %%doc}
 %license COPYING
 %doc sample.spec sample.conf AUTHORS README.dkms
-%if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
+%if 0%{?fedora} || 0%{?rhel} >= 7
 %{_unitdir}/%{name}.service
 %else
 %{_initrddir}/%{name}_autoinstaller
@@ -125,6 +114,12 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Tue May 24 2016 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-33.git.4c69692
+- Remove RHEL 5 support from SPEC file, latest source code does not work on it.
+- Switch to new Github source code repository, adjust to packaging guidelines
+  accordingly.
+- Adjust Fedora conditionals.
+
 * Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 2.2.0.3-32.git.7c3e7c5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
