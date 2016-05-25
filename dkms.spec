@@ -1,10 +1,10 @@
-%global commit0 4c69692cf3d699f84faf4f21d82f48d4d9103404
+%global commit0 9e0394de8f08b69a257994b34ab9a6739003d8ea
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        33%{?shortcommit0:.git.%{shortcommit0}}%{?dist}
+Release:        34%{?shortcommit0:.git.%{shortcommit0}}%{?dist}
 License:        GPLv2+
 URL:            http://linux.dell.com/dkms
 
@@ -114,6 +114,9 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Wed May 25 2016 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-34.git.9e0394d
+- Update to latest sources (#1334103).
+
 * Tue May 24 2016 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-33.git.4c69692
 - Remove RHEL 5 support from SPEC file, latest source code does not work on it.
 - Switch to new Github source code repository, adjust to packaging guidelines
