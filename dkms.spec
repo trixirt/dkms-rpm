@@ -1,10 +1,10 @@
-%global commit0 9e0394de8f08b69a257994b34ab9a6739003d8ea
+%global commit0 eb402f72b9a71ccdd0d3610db8570195eb048f1f
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.2.0.3
-Release:        34%{?shortcommit0:.git.%{shortcommit0}}%{?dist}
+Release:        35%{?shortcommit0:.git.%{shortcommit0}}%{?dist}
 License:        GPLv2+
 URL:            http://linux.dell.com/dkms
 
@@ -114,6 +114,9 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Fri May 27 2016 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-35.git.eb402f7
+- Update to latest sources (#912300).
+
 * Wed May 25 2016 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-34.git.9e0394d
 - Update to latest sources (#1334103).
 
