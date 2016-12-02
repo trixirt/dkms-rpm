@@ -1,10 +1,11 @@
-%global commit0 eb402f72b9a71ccdd0d3610db8570195eb048f1f
+%global commit0 de1dca939ac0f72100cb599e0872347f927f940c
+%global date 20161202
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
-Version:        2.2.0.3
-Release:        35%{?shortcommit0:.git.%{shortcommit0}}%{?dist}
+Version:        2.3
+Release:        1%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 License:        GPLv2+
 URL:            http://linux.dell.com/dkms
 
@@ -68,13 +69,13 @@ install -p -m 755 -D %{SOURCE1} %{buildroot}%{_initrddir}/%{name}_autoinstaller
 %if 0%{?fedora} || 0%{?rhel} >= 7
 
 %post
-%systemd_post %{name}_autoinstaller.service
+%systemd_post %{name}.service
 
 %preun
-%systemd_preun %{name}_autoinstaller.service
+%systemd_preun %{name}.service
 
 %postun
-%systemd_postun %{name}_autoinstaller.service
+%systemd_postun %{name}.service
 
 %else
 
@@ -98,7 +99,7 @@ fi
 %files
 %{!?_licensedir:%global license %%doc}
 %license COPYING
-%doc sample.spec sample.conf AUTHORS README.dkms
+%doc sample.spec sample.conf AUTHORS README.md
 %if 0%{?fedora} || 0%{?rhel} >= 7
 %{_unitdir}/%{name}.service
 %else
@@ -114,6 +115,11 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Fri Dec 02 2016 Simone Caronni <negativo17@gmail.com> - 2.3-1.20161101gitede1dca
+- Update to latest snapshot.
+- Adjust release tag to packaging guidelines.
+- Fix scriptlets.
+
 * Fri May 27 2016 Simone Caronni <negativo17@gmail.com> - 2.2.0.3-35.git.eb402f7
 - Update to latest sources (#912300).
 
