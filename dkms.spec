@@ -5,7 +5,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.3
-Release:        2%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
+Release:        3%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 License:        GPLv2+
 URL:            http://linux.dell.com/dkms
 
@@ -22,22 +22,26 @@ Requires:       gawk
 Requires:       gcc
 Requires:       grep
 Requires:       gzip
-Requires:       kernel-devel
-%if 0%{?fedora} || 0%{?rhel} >= 7
-Requires:       kmod
-%else
-Requires:       module-init-tools
-%endif
 Requires:       sed
 Requires:       tar
 Requires:       which
 
+# The virtual provide 'kernel-devel-uname-r' tries to get the right
+# kernel variant  (kernel-PAE, kernel-debug, etc.) devel package
+# installed.
+# https://bugzilla.redhat.com/show_bug.cgi?id=1420754#c0
+# https://bugzilla.redhat.com/show_bug.cgi?id=1421105#c2
+Requires: kernel-devel-uname-r
+%{?fedora:Suggests: kernel-devel}
+
 %if 0%{?fedora} || 0%{?rhel} >= 7
 BuildRequires:          systemd
+Requires:               kmod
 Requires(post):         systemd
 Requires(preun):        systemd
 Requires(postun):       systemd
 %else
+Requires:               module-init-tools
 Requires(post):         /sbin/chkconfig
 Requires(preun):        /sbin/chkconfig
 Requires(preun):        /sbin/service
@@ -115,6 +119,10 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Sat Feb 11 2017 Simone Caronni <negativo17@gmail.com> - 2.3-3.20161202gitde1dca9
+- Require kernel-devel-uname-r in place of kernel-devel and suggest kernel-devel
+  for Fedora (#1421106).
+
 * Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 2.3-2.20161202gitde1dca9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
