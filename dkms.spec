@@ -1,11 +1,11 @@
-%global commit0 de1dca939ac0f72100cb599e0872347f927f940c
-%global date 20161202
+%global commit0 974d838f6f01fe57b0275c689f95c49784f3a0d4
+%global date 20170313
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.3
-Release:        2%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
+Release:        4%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 License:        GPLv2+
 URL:            http://linux.dell.com/dkms
 
@@ -32,7 +32,6 @@ Requires:       which
 # https://bugzilla.redhat.com/show_bug.cgi?id=1420754#c0
 # https://bugzilla.redhat.com/show_bug.cgi?id=1421105#c2
 Requires: kernel-devel-uname-r
-%{?fedora:Suggests: kernel-devel}
 
 %if 0%{?fedora} || 0%{?rhel} >= 7
 BuildRequires:          systemd
@@ -56,8 +55,6 @@ method for installing module RPMS as originally developed by Dell.
 %setup -qn %{name}-%{commit0}
 
 %install
-rm -rf %{buildroot}
-
 %if 0%{?fedora} || 0%{?rhel} >= 7
 make install-redhat-systemd DESTDIR=%{buildroot} \
     LIBDIR=%{buildroot}%{_prefix}/lib/%{name} \
@@ -101,7 +98,6 @@ fi
 %endif
 
 %files
-%{!?_licensedir:%global license %%doc}
 %license COPYING
 %doc sample.spec sample.conf AUTHORS README.md
 %if 0%{?fedora} || 0%{?rhel} >= 7
@@ -119,6 +115,10 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Wed Apr 05 2017 Simone Caronni <negativo17@gmail.com> - 2.3-4.20170313git974d838
+- Update to latest snapshot.
+- Do not require wrong kernel-devel variant (#1436840).
+
 * Sat Feb 11 2017 Simone Caronni <negativo17@gmail.com> - 2.3-2.20161202gitde1dca9
 - Require kernel-devel-uname-r in place of kernel-devel and suggest kernel-devel
   for Fedora (#1421106).
