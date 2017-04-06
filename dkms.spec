@@ -31,7 +31,7 @@ Requires:       which
 # installed.
 # https://bugzilla.redhat.com/show_bug.cgi?id=1420754#c0
 # https://bugzilla.redhat.com/show_bug.cgi?id=1421105#c2
-Requires: kernel-devel-uname-r
+Requires:       kernel-devel-uname-r
 
 %if 0%{?fedora} || 0%{?rhel} >= 7
 BuildRequires:          systemd
