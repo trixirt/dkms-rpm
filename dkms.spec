@@ -1,11 +1,11 @@
-%global commit0 974d838f6f01fe57b0275c689f95c49784f3a0d4
-%global date 20170313
+%global commit0 8c3065c6b26d573d55abfcb17b422204ba63e590
+%global date 20170523
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.3
-Release:        4%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
+Release:        5%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 License:        GPLv2+
 URL:            http://linux.dell.com/dkms
 
@@ -115,6 +115,10 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Tue May 23 2017 Simone Caronni <negativo17@gmail.com> - 2.3-5.20170523git8c3065c
+- Update to latest snapshot; lots of specific Red Hat/Fedora cleanups (obsolete
+  Red Hat/Fedora code, Itanium support, /boot leftovers) and module autoload.
+
 * Wed Apr 05 2017 Simone Caronni <negativo17@gmail.com> - 2.3-4.20170313git974d838
 - Update to latest snapshot.
 - Do not require wrong kernel-devel variant (#1436840).
