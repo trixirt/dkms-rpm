@@ -1,11 +1,11 @@
-%global commit0 8c3065c6b26d573d55abfcb17b422204ba63e590
-%global date 20170523
+%global commit0 959bd74f4f3ba9230ea66a4f71f4f786c25e5116
+%global date 20170926
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
-Version:        2.3
-Release:        6%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
+Version:        2.4.0
+Release:        1%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 License:        GPLv2+
 URL:            http://linux.dell.com/dkms
 
@@ -16,6 +16,7 @@ Source1:        %{name}_autoinstaller.init
 
 Requires:       coreutils
 Requires:       cpio
+Requires:       elfutils-libelf-devel
 Requires:       file
 Requires:       findutils
 Requires:       gawk
@@ -115,6 +116,10 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 
 %changelog
+* Mon Oct 09 2017 Simone Caronni <negativo17@gmail.com> - 2.4.0-1.20170926git959bd74
+- Update to latest commits post 2.4.
+- Add elfutils-libelf-devel build requirement.
+
 * Wed Jul 26 2017 Fedora Release Engineering <releng@fedoraproject.org> - 2.3-6.20170523git8c3065c
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
 
