@@ -1,11 +1,11 @@
-%global commit0 215d01a18b644fa7718a3f70b87d1d55fd66afef
-%global date 20180124
+%global commit0 b1b90330a61651bd6124b5d3c7631d7dcde01510
+%global date 20180306
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.5.0
-Release:        1%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
+Release:        2%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 License:        GPLv2+
 URL:            http://linux.dell.com/dkms
 
@@ -75,6 +75,9 @@ make install-redhat-systemd DESTDIR=%{buildroot} \
 %{_unitdir}/%{name}.service
 
 %changelog
+* Tue Mar 06 2018 Simone Caronni <negativo17@gmail.com> - 2.5.0-2.20180306gitb1b9033
+- Update to latest snapshot.
+
 * Wed Jan 24 2018 Simone Caronni <negativo17@gmail.com> - 2.5.0-1.20180124git215d01a
 - Update to latest post 2.5.0 snapshot.
 - Trim changelog.
