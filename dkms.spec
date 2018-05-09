@@ -1,17 +1,13 @@
-%global commit0 b1b90330a61651bd6124b5d3c7631d7dcde01510
-%global date 20180306
-%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
-Version:        2.5.0
-Release:        3%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
+Version:        2.6.1
+Release:        1%{?dist}
 License:        GPLv2+
 URL:            http://linux.dell.com/dkms
 
 BuildArch:      noarch
 
-Source0:        https://github.com/dell-oss/%{name}/archive/%{commit0}/%{name}-%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
+Source0:        https://github.com/dell-oss/%{name}/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 
 BuildRequires:  systemd
 
@@ -45,7 +41,7 @@ This package contains the framework for the Dynamic Kernel Module Support (DKMS)
 method for installing module RPMS as originally developed by Dell.
 
 %prep
-%autosetup -p1 -n %{name}-%{commit0}
+%autosetup -p1
 
 %install
 make install-redhat-systemd DESTDIR=%{buildroot} \
@@ -75,6 +71,9 @@ make install-redhat-systemd DESTDIR=%{buildroot} \
 %{_unitdir}/%{name}.service
 
 %changelog
+* Wed May 09 2018 Simone Caronni <negativo17@gmail.com> - 2.6.1-1
+- Update to 2.6.1.
+
 * Tue Mar 06 2018 Simone Caronni <negativo17@gmail.com> - 2.5.0-3.20180306gitb1b9033
 - Update to latest snapshot.
 
