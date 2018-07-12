@@ -1,7 +1,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.6.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        GPLv2+
 URL:            http://linux.dell.com/dkms
 
@@ -71,6 +71,9 @@ make install-redhat-systemd DESTDIR=%{buildroot} \
 %{_unitdir}/%{name}.service
 
 %changelog
+* Thu Jul 12 2018 Fedora Release Engineering <releng@fedoraproject.org> - 2.6.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+
 * Wed May 09 2018 Simone Caronni <negativo17@gmail.com> - 2.6.1-1
 - Update to 2.6.1.
 
