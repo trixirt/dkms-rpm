@@ -67,7 +67,7 @@ make install-redhat-systemd DESTDIR=%{buildroot} \
 %config(noreplace) %{_sysconfdir}/%{name}
 %{_sysconfdir}/kernel/postinst.d/%{name}
 %{_sysconfdir}/kernel/prerm.d/%{name}
-%{_sysconfdir}/bash_completion.d/%{name}
+%{_datadir}/bash-completion/completions/%{name}
 %{_unitdir}/%{name}.service
 
 %changelog
