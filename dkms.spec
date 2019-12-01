@@ -1,7 +1,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
-Version:        2.7.1
-Release:        2%{?dist}
+Version:        2.8.1
+Release:        1%{?dist}
 License:        GPLv2+
 URL:            http://linux.dell.com/dkms
 
@@ -44,7 +44,8 @@ method for installing module RPMS as originally developed by Dell.
 %autosetup -p1
 
 %install
-make install-redhat-systemd DESTDIR=%{buildroot} \
+make install-redhat-systemd \
+    DESTDIR=%{buildroot} \
     LIBDIR=%{buildroot}%{_prefix}/lib/%{name} \
     SYSTEMD=%{buildroot}%{_unitdir}
 
@@ -71,6 +72,9 @@ make install-redhat-systemd DESTDIR=%{buildroot} \
 %{_unitdir}/%{name}.service
 
 %changelog
+* Sun Dec 01 2019 Simone Caronni <negativo17@gmail.com> - 2.8.1-1
+- Update to 2.8.1.
+
 * Wed Jul 24 2019 Fedora Release Engineering <releng@fedoraproject.org> - 2.7.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
