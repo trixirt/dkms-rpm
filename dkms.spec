@@ -1,7 +1,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.8.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        GPLv2+
 URL:            http://linux.dell.com/dkms
 
@@ -72,6 +72,9 @@ make install-redhat-systemd \
 %{_unitdir}/%{name}.service
 
 %changelog
+* Tue Jan 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 2.8.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+
 * Sun Dec 01 2019 Simone Caronni <negativo17@gmail.com> - 2.8.1-1
 - Update to 2.8.1.
 
