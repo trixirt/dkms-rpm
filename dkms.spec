@@ -62,6 +62,9 @@ make install-redhat-systemd \
     LIBDIR=%{buildroot}%{_prefix}/lib/%{name} \
     SYSTEMD=%{buildroot}%{_unitdir}
 
+install -p -m 644 -D kernel_install.d_dkms \
+    %{buildroot}%{_prefix}/lib/kernel/install.d/40-%{name}.install
+
 %post
 %systemd_post %{name}.service
 
@@ -75,6 +78,7 @@ make install-redhat-systemd \
 %license COPYING
 %doc sample.spec sample.conf AUTHORS README.md
 %{_prefix}/lib/%{name}
+%{_prefix}/lib/kernel/install.d/40-%{name}.install
 %{_mandir}/man8/dkms.8*
 %{_sbindir}/%{name}
 %{_sharedstatedir}/%{name}
