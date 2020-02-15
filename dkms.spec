@@ -1,13 +1,22 @@
+%global commit0 5ca628c40218d7deb4b94d6c568c078c68b9e1c6
+%global date 20200214
+%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+#global tag 1
+
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.8.1
-Release:        2%{?dist}
+Release:        3%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 License:        GPLv2+
 URL:            http://linux.dell.com/dkms
 
 BuildArch:      noarch
 
-Source0:        https://github.com/dell-oss/%{name}/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
+%if 0%{?tag:1}
+Source0:        https://github.com/dell/%{name}/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
+%else
+Source0:        https://github.com/dell/%{name}/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
+%endif
 
 BuildRequires:  systemd
 
@@ -41,7 +50,11 @@ This package contains the framework for the Dynamic Kernel Module Support (DKMS)
 method for installing module RPMS as originally developed by Dell.
 
 %prep
+%if 0%{?tag:1}
 %autosetup -p1
+%else
+%autosetup -p1 -n %{name}-%{commit0}
+%endif
 
 %install
 make install-redhat-systemd \
@@ -72,6 +85,9 @@ make install-redhat-systemd \
 %{_unitdir}/%{name}.service
 
 %changelog
+* Sat Feb 15 2020 Simone Caronni <negativo17@gmail.com> - 2.8.1-3.20200214git5ca628c
+- Update to latest snapshot.
+
 * Tue Jan 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 2.8.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
