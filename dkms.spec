@@ -6,7 +6,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.8.1
-Release:        3%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        4%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 License:        GPLv2+
 URL:            http://linux.dell.com/dkms
 
@@ -62,7 +62,7 @@ make install-redhat-systemd \
     LIBDIR=%{buildroot}%{_prefix}/lib/%{name} \
     SYSTEMD=%{buildroot}%{_unitdir}
 
-install -p -m 644 -D kernel_install.d_dkms \
+install -p -m 755 -D kernel_install.d_dkms \
     %{buildroot}%{_prefix}/lib/kernel/install.d/40-%{name}.install
 
 %post
@@ -89,6 +89,9 @@ install -p -m 644 -D kernel_install.d_dkms \
 %{_unitdir}/%{name}.service
 
 %changelog
+* Wed Feb 19 2020 Martin Jackson <mhjacks@swbell.net> - 2.8.1-4.20200214git5ca628c
+- Change mode to 755 for new install.d script.
+
 * Sat Feb 15 2020 Simone Caronni <negativo17@gmail.com> - 2.8.1-3.20200214git5ca628c
 - Update to latest snapshot.
 
@@ -113,8 +116,11 @@ install -p -m 644 -D kernel_install.d_dkms \
 * Wed May 09 2018 Simone Caronni <negativo17@gmail.com> - 2.6.1-1
 - Update to 2.6.1.
 
-* Tue Mar 06 2018 Simone Caronni <negativo17@gmail.com> - 2.5.0-2.20180306gitb1b9033
+* Tue Mar 06 2018 Simone Caronni <negativo17@gmail.com> - 2.5.0-3.20180306gitb1b9033
 - Update to latest snapshot.
+
+* Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 2.5.0-2.20180124git215d01a
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
 * Wed Jan 24 2018 Simone Caronni <negativo17@gmail.com> - 2.5.0-1.20180124git215d01a
 - Update to latest post 2.5.0 snapshot.
@@ -137,9 +143,12 @@ install -p -m 644 -D kernel_install.d_dkms \
 - Update to latest snapshot.
 - Do not require wrong kernel-devel variant (#1436840).
 
-* Sat Feb 11 2017 Simone Caronni <negativo17@gmail.com> - 2.3-2.20161202gitde1dca9
+* Sat Feb 11 2017 Simone Caronni <negativo17@gmail.com> - 2.3-3.20161202gitde1dca9
 - Require kernel-devel-uname-r in place of kernel-devel and suggest kernel-devel
   for Fedora (#1421106).
+
+* Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 2.3-2.20161202gitde1dca9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
 * Fri Dec 02 2016 Simone Caronni <negativo17@gmail.com> - 2.3-1.20161101gitede1dca
 - Update to latest snapshot.
