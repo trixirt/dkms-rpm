@@ -6,7 +6,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.8.1
-Release:        3%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        4%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 License:        GPLv2+
 URL:            http://linux.dell.com/dkms
 
@@ -62,7 +62,7 @@ make install-redhat-systemd \
     LIBDIR=%{buildroot}%{_prefix}/lib/%{name} \
     SYSTEMD=%{buildroot}%{_unitdir}
 
-install -p -m 644 -D kernel_install.d_dkms \
+install -p -m 755 -D kernel_install.d_dkms \
     %{buildroot}%{_prefix}/lib/kernel/install.d/40-%{name}.install
 
 %post
@@ -89,6 +89,9 @@ install -p -m 644 -D kernel_install.d_dkms \
 %{_unitdir}/%{name}.service
 
 %changelog
+* Wed Feb 19 2020 Martin Jackson <mhjacks@swbell.net> - 2.8.1-4.20200214git5ca628c
+- Change mode to 755 for new install.d script.
+
 * Sat Feb 15 2020 Simone Caronni <negativo17@gmail.com> - 2.8.1-3.20200214git5ca628c
 - Update to latest snapshot.
 
