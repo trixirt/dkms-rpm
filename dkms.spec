@@ -1,12 +1,12 @@
 %global commit0 5ca628c40218d7deb4b94d6c568c078c68b9e1c6
 %global date 20200214
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-#global tag 1
+%global tag 1
 
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
-Version:        2.8.1
-Release:        4%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Version:        2.8.2
+Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 License:        GPLv2+
 URL:            http://linux.dell.com/dkms
 
@@ -76,7 +76,7 @@ install -p -m 755 -D kernel_install.d_dkms \
 
 %files
 %license COPYING
-%doc sample.spec sample.conf AUTHORS README.md
+%doc sample.spec sample.conf AUTHORS README.md sign_helper.sh
 %{_prefix}/lib/%{name}
 %{_prefix}/lib/kernel/install.d/40-%{name}.install
 %{_mandir}/man8/dkms.8*
@@ -89,6 +89,10 @@ install -p -m 755 -D kernel_install.d_dkms \
 %{_unitdir}/%{name}.service
 
 %changelog
+* Thu Jul 02 2020 Simone Caronni <negativo17@gmail.com> - 2.8.2-1
+- Update to 2.8.2.
+- Add sign helper script sample to docs.
+
 * Wed Feb 19 2020 Martin Jackson <mhjacks@swbell.net> - 2.8.1-4.20200214git5ca628c
 - Change mode to 755 for new install.d script.
 
