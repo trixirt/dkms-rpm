@@ -5,8 +5,8 @@
 
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
-Version:        2.8.2
-Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Version:        2.8.3
+Release:        1%{?dist}
 License:        GPLv2+
 URL:            http://linux.dell.com/dkms
 
@@ -89,6 +89,9 @@ install -p -m 755 -D kernel_install.d_dkms \
 %{_unitdir}/%{name}.service
 
 %changelog
+* Wed Jul 15 2020 Simone Caronni <negativo17@gmail.com> - 2.8.3-1
+- Update to 2.8.3.
+
 * Thu Jul 02 2020 Simone Caronni <negativo17@gmail.com> - 2.8.2-1
 - Update to 2.8.2.
 - Add sign helper script sample to docs.
