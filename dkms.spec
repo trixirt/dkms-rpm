@@ -6,7 +6,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        2.8.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        GPLv2+
 URL:            http://linux.dell.com/dkms
 
@@ -30,6 +30,7 @@ Requires:       gcc
 Requires:       grep
 Requires:       gzip
 Requires:       kmod
+Requires:       make
 Requires:       sed
 Requires:       tar
 Requires:       which
@@ -89,6 +90,9 @@ install -p -m 755 -D kernel_install.d_dkms \
 %{_unitdir}/%{name}.service
 
 %changelog
+* Mon Jul 20 2020 Simone Caronni <negativo17@gmail.com> - 2.8.3-2
+- Add make to requirements.
+
 * Wed Jul 15 2020 Simone Caronni <negativo17@gmail.com> - 2.8.3-1
 - Update to 2.8.3.
 
