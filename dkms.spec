@@ -19,6 +19,7 @@ Source0:        https://github.com/dell/%{name}/archive/%{commit0}.tar.gz#/%{nam
 %endif
 
 BuildRequires:  systemd
+BuildRequires: make
 
 Requires:       coreutils
 Requires:       cpio
