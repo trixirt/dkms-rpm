@@ -18,8 +18,8 @@ Source0:        https://github.com/dell/%{name}/archive/v%{version}.tar.gz#/%{na
 Source0:        https://github.com/dell/%{name}/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
 %endif
 
+BuildRequires:  make
 BuildRequires:  systemd
-BuildRequires: make
 
 Requires:       coreutils
 Requires:       cpio
