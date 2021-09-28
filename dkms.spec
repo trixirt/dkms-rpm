@@ -17,6 +17,7 @@ Source0:        https://github.com/dell/%{name}/archive/v%{version}.tar.gz#/%{na
 %else
 Source0:        https://github.com/dell/%{name}/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
 %endif
+Patch0:         git.patch
 
 BuildRequires:  make
 BuildRequires:  systemd
