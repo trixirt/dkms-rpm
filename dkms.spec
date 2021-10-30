@@ -59,7 +59,7 @@ method for installing module RPMS as originally developed by Dell.
 %endif
 
 %install
-make install-redhat-systemd \
+make install-redhat \
     DESTDIR=%{buildroot} \
     LIBDIR=%{buildroot}%{_prefix}/lib/%{name} \
     SYSTEMD=%{buildroot}%{_unitdir}
