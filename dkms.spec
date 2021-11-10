@@ -6,7 +6,7 @@
 Summary:        Dynamic Kernel Module Support Framework
 Name:           dkms
 Version:        3.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        GPLv2+
 URL:            http://linux.dell.com/dkms
 
@@ -41,8 +41,9 @@ Requires:       which
 # installed.
 # https://bugzilla.redhat.com/show_bug.cgi?id=1420754#c0
 # https://bugzilla.redhat.com/show_bug.cgi?id=1421105#c2
-Requires:       kernel-devel-uname-r
-
+#
+# The RT kernel is a seperate package
+Requires:       (kernel-devel-uname-r if kernel), (kernel-rt-devel-uname-r if kernel-rt)
 Requires(post):     systemd
 Requires(preun):    systemd
 Requires(postun):   systemd
@@ -92,6 +93,9 @@ install -p -m 755 -D kernel_install.d_dkms \
 %{_unitdir}/%{name}.service
 
 %changelog
+* Wed Nov 10 2021 Tom Rix <trix@redhat.com> - 3.0.0-2
+- The RT kernel comes from the kernel-rt package
+
 * Mon Nov 08 2021 Simone Caronni <negativo17@gmail.com> - 3.0.0-1
 - Update to 3.0.0.
 
